@@ -1,8 +1,13 @@
-/*export const listPoints = () => (
-  // Создаем тег ul через кретЭлемент, присваеваем класс
-  // `<ul class="trip-events__list">`
-  // Далее добавляем li через массив
-  ${points.orEach((elem) => {
-    elem.insertAdjacentHTML('beforeend', elem);
-  })}
-);*/
+import {routePoint} from './route-point.js';
+import {formEditingPoint} from './form-editing-point.js';
+
+const points = [formEditingPoint(), routePoint(), routePoint()];
+
+const createList = () => {
+  const list = points.join('');
+  return list;
+};
+
+export const listPoints = () => (
+  `<ul class="trip-events__list">${createList()}</ul>`
+);
