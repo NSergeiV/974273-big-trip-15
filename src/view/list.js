@@ -1,7 +1,7 @@
 import {routePoint} from './route-point.js';
 import {formEditingPoint} from './form-editing-point.js';
 
-const points = [formEditingPoint(), routePoint(), routePoint()];
+const points = [formEditingPoint(), routePoint(), routePoint(), routePoint()];
 
 const createList = () => {
   const list = points.join('');
