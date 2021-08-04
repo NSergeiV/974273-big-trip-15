@@ -3,6 +3,7 @@ import {headerMenu} from './view/header-menu.js';
 import {headerFilter} from './view/header-filter.js';
 import {mainTripSort} from './view/main-sort.js';
 import {listPoints} from './view/list.js';
+// import {generateTask} from './mock/task.js';
 
 const paste = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -21,3 +22,5 @@ paste(siteHeaderElementNavigation, headerMenu(), 'beforeend');
 paste(siteHeaderElementFilter, headerFilter(), 'beforeend');
 paste(siteMainSection, mainTripSort(), 'afterbegin');
 paste(siteMainSection, listPoints(), 'beforeend');
+
+// console.log(generateTask());
