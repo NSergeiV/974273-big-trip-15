@@ -1,9 +1,10 @@
+// import flatpickr from "flatpickr";
 import {headerRoutePrice} from './view/header-route-price.js';
 import {headerMenu} from './view/header-menu.js';
 import {headerFilter} from './view/header-filter.js';
 import {mainTripSort} from './view/main-sort.js';
 import {listPoints} from './view/list.js';
-// import {generateTask} from './mock/task.js';
+//import {generateTask} from './mock/task.js';
 
 const paste = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -23,4 +24,8 @@ paste(siteHeaderElementFilter, headerFilter(), 'beforeend');
 paste(siteMainSection, mainTripSort(), 'afterbegin');
 paste(siteMainSection, listPoints(), 'beforeend');
 
-// console.log(generateTask());
+//const flatpickr = require("flatpickr");
+// const Ddddd = flatpickr(document.querySelector('#event-start-time-1'), {dateFormat: "Y-m-d",});
+//console.log(Ddddd);
+
+//console.log(generateTask());
