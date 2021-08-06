@@ -1,4 +1,4 @@
-// import flatpickr from "flatpickr";
+import flatpickr from 'flatpickr';
 import {headerRoutePrice} from './view/header-route-price.js';
 import {headerMenu} from './view/header-menu.js';
 import {headerFilter} from './view/header-filter.js';
@@ -27,5 +27,7 @@ paste(siteMainSection, listPoints(), 'beforeend');
 //const flatpickr = require("flatpickr");
 // const Ddddd = flatpickr(document.querySelector('#event-start-time-1'), {dateFormat: "Y-m-d",});
 //console.log(Ddddd);
+
+flatpickr(document.querySelector('#event-start-time-1'), {dateFormat: "Y-m-d",});
 
 //console.log(generateTask());
