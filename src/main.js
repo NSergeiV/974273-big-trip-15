@@ -26,8 +26,15 @@ paste(siteMainSection, listPoints(), 'beforeend');
 
 //const flatpickr = require("flatpickr");
 // const Ddddd = flatpickr(document.querySelector('#event-start-time-1'), {dateFormat: "Y-m-d",});
-//console.log(Ddddd);
+// console.log(Ddddd);
 
-flatpickr(document.querySelector('#event-start-time-1'), {dateFormat: "Y-m-d",});
+const configFlatpickr = {
+  enableTime: true,
+  dateFormat: 'd-m-Y H:i',
+  altInput: true,
+  altFormat: 'F j, Y (h:S K)',
+};
+
+flatpickr('event__input--time', configFlatpickr);
 
 //console.log(generateTask());
