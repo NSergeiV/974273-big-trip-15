@@ -30,11 +30,14 @@ paste(siteMainSection, listPoints(), 'beforeend');
 
 const configFlatpickr = {
   enableTime: true,
-  dateFormat: 'd-m-Y H:i',
   altInput: true,
-  altFormat: 'F j, Y (h:S K)',
+  altFormat: 'd/m/y H:i',
+  dateFormat: 'd/m/y H:i',
 };
 
-flatpickr('event__input--time', configFlatpickr);
+//console.log(document.querySelector('.event__field-group--time'));
+
+flatpickr('.event__input.event__input--time', configFlatpickr);
+//flatpickr('#event-end-time-1', configFlatpickr);
 
 //console.log(generateTask());
