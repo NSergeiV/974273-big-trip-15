@@ -52,14 +52,6 @@ const generateOffer = (length) => {
   return offersNew;
 };
 
-
-// console.log(flatpickr);
-
-/*const generateDate = () => {
-  // const flatpickr = require("flatpickr");
-  return flatpickr(element, {dateFormat: "Y-m-d H:i",});
-};
-*/
 let nameEventIcon;
 
 const generateEventType = () => {
