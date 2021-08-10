@@ -4,7 +4,7 @@ import {headerMenu} from './view/header-menu.js';
 import {headerFilter} from './view/header-filter.js';
 import {mainTripSort} from './view/main-sort.js';
 import {listPoints} from './view/list.js';
-//import {generateTask} from './mock/task.js';
+// import {generateTask} from './mock/task.js';
 
 const paste = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -40,4 +40,4 @@ const configFlatpickr = {
 flatpickr('.event__input.event__input--time', configFlatpickr);
 //flatpickr('#event-end-time-1', configFlatpickr);
 
-//console.log(generateTask());
+// console.log(generateTask());
