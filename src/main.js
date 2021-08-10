@@ -6,6 +6,12 @@ import {mainTripSort} from './view/main-sort.js';
 import {listPoints} from './view/list.js';
 // import {generateTask} from './mock/task.js';
 
+// const TASK_COUNT = 20;
+
+// const tasks = new Array(TASK_COUNT).fill().map(generateTask);
+// console.log(tasks);
+
+
 const paste = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
@@ -24,10 +30,6 @@ paste(siteHeaderElementFilter, headerFilter(), 'beforeend');
 paste(siteMainSection, mainTripSort(), 'afterbegin');
 paste(siteMainSection, listPoints(), 'beforeend');
 
-//const flatpickr = require("flatpickr");
-// const Ddddd = flatpickr(document.querySelector('#event-start-time-1'), {dateFormat: "Y-m-d",});
-// console.log(Ddddd);
-
 const configFlatpickr = {
   enableTime: true,
   altInput: true,
@@ -35,9 +37,4 @@ const configFlatpickr = {
   dateFormat: 'd/m/y H:i',
 };
 
-//console.log(document.querySelector('.event__field-group--time'));
-
 flatpickr('.event__input.event__input--time', configFlatpickr);
-//flatpickr('#event-end-time-1', configFlatpickr);
-
-// console.log(generateTask());

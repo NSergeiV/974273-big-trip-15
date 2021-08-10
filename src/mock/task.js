@@ -1,4 +1,4 @@
-/*
+
 import dayjs from 'dayjs';
 
 const getRandomInteger = (a = 0, b = 1) => {
@@ -21,8 +21,11 @@ const generateDescription = (length) => {
   return descriptionFull;
 };
 
-const generatePhoto = () => {
-  const photoAdress = `http://picsum.photos/248/152?r=${Math.random()}`;
+const generatePhoto = (result = getRandomInteger(0, 1)) => {
+  let photoAdress = null;
+  if (result === 1) {
+    photoAdress = `http://picsum.photos/248/152?r=${Math.random()}`;
+  }
   return photoAdress;
 };
 
@@ -59,9 +62,15 @@ const calculate = (d, h, m) => {
     const day = dayjs().date(d).format('DD');
     const hour = dayjs().hour(h).format('HH');
     const minute = dayjs().minute(m).format('mm');
-    console.log(day);
-    console.log(hour);
-    console.log(minute);
+
+    return `${day}D ${hour}H ${minute}M`;
+  } else if (h !== 0) {
+    const hour = dayjs().hour(h).format('HH');
+    const minute = dayjs().minute(m).format('mm');
+    return `${hour}H ${minute}M`;
+  } else {
+    const minute = dayjs().minute(m).format('mm');
+    return `${minute}M`;
   }
 };
 
@@ -69,36 +78,27 @@ export const generateTask = () => {
   const dateStart = generateDate();
   const eventDate = dayjs(dateStart).format('MMM DD');
   const eventTimeStart = dayjs(dateStart).format('HH:mm');
-  // console.log(dateStart);
-  // console.log(eventDate);
   const dateEnd = generateDate(dateStart);
   const eventTimeEnd = dayjs(dateEnd).format('HH:mm');
-  // console.log(dateEnd);
   const travelTimeMinute = dateEnd.diff(dateStart, 'm');
   const travelTimeHour = dateEnd.diff(dateStart, 'h');
   const travelTimeDay = dateEnd.diff(dateStart, 'd');
-
-  console.log(travelTimeMinute);
-  console.log(travelTimeHour);
-  console.log(travelTimeDay);
-  console.log(dayjs().date(1).format('DD'));
-  console.log(1750%60);
 
   const travelTime = calculate(travelTimeDay, travelTimeHour, travelTimeMinute);
 
   return {
     eventDate,
     eventTimeStart,
-    //travelTime,
+    travelTime,
     eventTimeEnd,
     eventType: generateEventType(),
     eventCity: generateCity(),
     eventIcon: nameEventIcon,
     eventPrice: getRandomInteger(1, 1000),
     eventOffer: generateOffer(getRandomInteger(0, 5)),
-    description: generateDescription(getRandomInteger(1, 5)),
+    description: generateDescription(getRandomInteger(0, 5)),
     eventPhoto: generatePhoto(),
     isFavorite: false,
   };
 };
-*/
+
