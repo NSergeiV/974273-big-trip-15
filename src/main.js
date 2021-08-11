@@ -4,11 +4,14 @@ import {headerMenu} from './view/header-menu.js';
 import {headerFilter} from './view/header-filter.js';
 import {mainTripSort} from './view/main-sort.js';
 import {listPoints} from './view/list.js';
-// import {generateTask} from './mock/task.js';
+import {generateTask} from './mock/task.js';
+import {formEditingPoint} from './view/form-editing-point.js';
+import {eventSectionOffers} from './view/event-section-offers.js';
+import {eventSectionDestination} from './view/event-section-destination.js';
 
-// const TASK_COUNT = 20;
+const TASK_COUNT = 20;
 
-// const tasks = new Array(TASK_COUNT).fill().map(generateTask);
+const tasks = new Array(TASK_COUNT).fill().map(generateTask);
 // console.log(tasks);
 
 
@@ -29,6 +32,20 @@ paste(siteHeaderElementNavigation, headerMenu(), 'beforeend');
 paste(siteHeaderElementFilter, headerFilter(), 'beforeend');
 paste(siteMainSection, mainTripSort(), 'afterbegin');
 paste(siteMainSection, listPoints(), 'beforeend');
+
+const tripEventsList = siteMainSection.querySelector('.trip-events__list');
+//console.log(tasks[0].description.length);
+//console.log(tasks[0].eventPhoto);
+
+paste(tripEventsList, formEditingPoint(), 'afterbegin');
+const eventDetails = document.querySelector('.event__details');
+if (tasks[0].eventOffer.length !== 0) {
+  paste(eventDetails, eventSectionOffers(), 'afterbegin');
+}
+if (tasks[0].description.length !== 0 || tasks[0].eventPhoto !== null) {
+  //console.log('works');
+  paste(eventDetails, eventSectionDestination(), 'beforeend');
+}
 
 const configFlatpickr = {
   enableTime: true,
