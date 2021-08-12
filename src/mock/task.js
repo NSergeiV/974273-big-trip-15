@@ -24,7 +24,7 @@ const generateDescription = (length) => {
 const generatePhoto = (result = getRandomInteger(0, 1)) => {
   let photoAdress = null;
   if (result === 1) {
-    photoAdress = `http://picsum.photos/248/152?r=${Math.random()}`;
+    photoAdress = [`http://picsum.photos/248/152?r=${Math.random()}`];
   }
   return photoAdress;
 };
