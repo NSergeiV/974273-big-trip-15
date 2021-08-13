@@ -9,6 +9,7 @@ import {formEditingPoint} from './view/form-editing-point.js';
 import {eventSectionOffers} from './view/event-section-offers.js';
 import {eventSectionDestination} from './view/event-section-destination.js';
 import {eventOfferSelector} from './view/event-offer-selector.js';
+import {routePoint} from './view/route-point.js';
 
 const TASK_COUNT = 20;
 
@@ -35,6 +36,7 @@ const tripEventsList = siteMainSection.querySelector('.trip-events__list');
 
 paste(tripEventsList, formEditingPoint(), 'afterbegin');
 const eventDetails = document.querySelector('.event__details');
+
 if (tasks[0].eventOffer.length !== 0) {
   paste(eventDetails, eventSectionOffers(), 'afterbegin');
   const eventAvailableOffers = eventDetails.querySelector('.event__available-offers');
@@ -45,6 +47,7 @@ if (tasks[0].eventOffer.length !== 0) {
     paste(eventAvailableOffers, eventOfferSelector(key[0], property[0]), 'afterbegin');
   });
 }
+
 if (tasks[0].description.length !== 0 || tasks[0].eventPhoto !== null) {
   paste(eventDetails, eventSectionDestination(tasks[0].description), 'beforeend');
   if (tasks[0].eventPhoto !== null) {
@@ -59,6 +62,8 @@ if (tasks[0].description.length !== 0 || tasks[0].eventPhoto !== null) {
     });
   }
 }
+
+paste(tripEventsList, routePoint(tasks[1]), 'beforeend');
 
 const configFlatpickr = {
   enableTime: true,

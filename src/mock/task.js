@@ -98,7 +98,7 @@ export const generateTask = () => {
     eventOffer: generateOffer(getRandomInteger(0, 5)),
     description: generateDescription(getRandomInteger(0, 5)),
     eventPhoto: generatePhoto(),
-    isFavorite: false,
+    isFavorite: getRandomInteger(),
   };
 };
 
