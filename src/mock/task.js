@@ -29,8 +29,8 @@ const generatePhoto = (result = getRandomInteger(0, 1)) => {
   return photoAdress;
 };
 
-const generateOffer = (length) => {
-  const offersNew = offers.splice(0, length);
+const generateOffer = () => {
+  const offersNew = offers.slice(0, getRandomInteger(0, 5));
   return offersNew;
 };
 
@@ -95,7 +95,7 @@ export const generateTask = () => {
     eventCity: generateCity(),
     eventIcon: nameEventIcon,
     eventPrice: getRandomInteger(1, 1000),
-    eventOffer: generateOffer(getRandomInteger(0, 5)),
+    eventOffer: generateOffer(),
     description: generateDescription(getRandomInteger(0, 5)),
     eventPhoto: generatePhoto(),
     isFavorite: getRandomInteger(),

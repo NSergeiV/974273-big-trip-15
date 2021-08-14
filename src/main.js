@@ -63,7 +63,9 @@ if (tasks[0].description.length !== 0 || tasks[0].eventPhoto !== null) {
   }
 }
 
-paste(tripEventsList, routePoint(tasks[1]), 'beforeend');
+for (let i = 1; i < tasks.length; i++) {
+  paste(tripEventsList, routePoint(tasks[i]), 'beforeend');
+}
 
 const configFlatpickr = {
   enableTime: true,
