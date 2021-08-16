@@ -50,7 +50,7 @@ const generateCity = () => {
 };
 
 const generateDate = (date) => {
-  const maxDaysGap = 11520;
+  const maxDaysGap = 21520;
   const maxDriveGap = 2880;
   const isDate = (!date) ? dayjs().add(getRandomInteger(24, maxDaysGap), 'm') : dayjs(date).add(getRandomInteger(1, maxDriveGap), 'm');
 
@@ -87,6 +87,7 @@ export const generateTask = () => {
   const travelTime = calculate(travelTimeDay, travelTimeHour, travelTimeMinute);
 
   return {
+    dateStart,
     eventDate,
     eventTimeStart,
     travelTime,

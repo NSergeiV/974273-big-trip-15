@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import flatpickr from 'flatpickr';
 import {headerRoutePrice} from './view/header-route-price.js';
 import {headerMenu} from './view/header-menu.js';
@@ -14,6 +15,11 @@ import {routePoint} from './view/route-point.js';
 const TASK_COUNT = 20;
 
 const tasks = new Array(TASK_COUNT).fill().map(generateTask);
+
+const tasksSort = tasks.slice().sort((a, b) => {
+  const rezalt = (dayjs(a.dateStart).isAfter(dayjs(b.dateStart))) ? 1 : -1;
+  return rezalt;
+});
 
 const paste = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -34,13 +40,13 @@ paste(siteMainSection, listPoints(), 'beforeend');
 
 const tripEventsList = siteMainSection.querySelector('.trip-events__list');
 
-paste(tripEventsList, formEditingPoint(), 'afterbegin');
+paste(tripEventsList, formEditingPoint(tasksSort[0]), 'afterbegin');
 const eventDetails = document.querySelector('.event__details');
 
-if (tasks[0].eventOffer.length !== 0) {
+if (tasksSort[0].eventOffer.length !== 0) {
   paste(eventDetails, eventSectionOffers(), 'afterbegin');
   const eventAvailableOffers = eventDetails.querySelector('.event__available-offers');
-  const offers = tasks[0].eventOffer;
+  const offers = tasksSort[0].eventOffer;
   offers.forEach((offer) => {
     const key = Object.keys(offer);
     const property = Object.values(offer);
@@ -48,11 +54,11 @@ if (tasks[0].eventOffer.length !== 0) {
   });
 }
 
-if (tasks[0].description.length !== 0 || tasks[0].eventPhoto !== null) {
-  paste(eventDetails, eventSectionDestination(tasks[0].description), 'beforeend');
-  if (tasks[0].eventPhoto !== null) {
+if (tasksSort[0].description.length !== 0 || tasksSort[0].eventPhoto !== null) {
+  paste(eventDetails, eventSectionDestination(tasksSort[0].description), 'beforeend');
+  if (tasksSort[0].eventPhoto !== null) {
     const eventPhotosTape = eventDetails.querySelector('.event__photos-tape');
-    const photos = tasks[0].eventPhoto;
+    const photos = tasksSort[0].eventPhoto;
     photos.forEach((photo) => {
       const newPhoto = document.createElement('img');
       newPhoto.classList.add('event__photo');
@@ -63,8 +69,8 @@ if (tasks[0].description.length !== 0 || tasks[0].eventPhoto !== null) {
   }
 }
 
-for (let i = 1; i < tasks.length; i++) {
-  paste(tripEventsList, routePoint(tasks[i]), 'beforeend');
+for (let i = 1; i < tasksSort.length; i++) {
+  paste(tripEventsList, routePoint(tasksSort[i]), 'beforeend');
 }
 
 const configFlatpickr = {
