@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import flatpickr from 'flatpickr';
 import {headerRoutePrice} from './view/header-route-price.js';
 import {headerMenu} from './view/header-menu.js';
@@ -6,6 +5,7 @@ import {headerFilter} from './view/header-filter.js';
 import {mainTripSort} from './view/main-sort.js';
 import {listPoints} from './view/list.js';
 import {generateTask} from './mock/task.js';
+import {compare} from './utils.js';
 import {formEditingPoint} from './view/form-editing-point.js';
 import {eventSectionOffers} from './view/event-section-offers.js';
 import {eventSectionDestination} from './view/event-section-destination.js';
@@ -16,10 +16,7 @@ const TASK_COUNT = 20;
 
 const tasks = new Array(TASK_COUNT).fill().map(generateTask);
 
-const tasksSort = tasks.slice().sort((a, b) => {
-  const rezalt = (dayjs(a.dateStart).isAfter(dayjs(b.dateStart))) ? 1 : -1;
-  return rezalt;
-});
+const tasksSort = tasks.slice().sort((a, b) => compare(a.dateStart, b.dateStart));
 
 const paste = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
