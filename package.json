@@ -19,8 +19,14 @@
     "node": "12"
   },
   "dependencies": {
+<<<<<<< HEAD
     "dayjs": "^1.10.6",
     "flatpickr": "^4.6.9",
+||||||| c1ba2b9
+=======
+    "dayjs": "^1.10.6",
+    "flatpickr": "4.6.9",
+>>>>>>> 6d2a4f1dff7bc5ad242f9fe46da4feea5aeb3f58
     "webpack": "^4.44.2"
   }
 }
