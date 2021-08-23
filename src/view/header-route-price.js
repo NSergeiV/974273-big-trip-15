@@ -1,6 +1,6 @@
-// import {createElement} from '../utils.js';
+import {createElement} from '../utils.js';
 
-export const createHeaderRoutePriceTemplate = () => (
+const createHeaderRoutePriceTemplate = () => (
   `<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
         <h1 class="trip-info__title">Amsterdam &mdash; Chamonix &mdash; Geneva</h1>
@@ -13,7 +13,7 @@ export const createHeaderRoutePriceTemplate = () => (
       </p>
     </section>`
 );
-/*
+
 export default class HeaderRoutePrice {
   constructor() {
     this._element = null;
@@ -35,4 +35,4 @@ export default class HeaderRoutePrice {
     this._element = null;
   }
 }
-*/
+
