@@ -1,3 +1,5 @@
+import {createElement} from '../utils.js';
+
 const offerTemplate = (offer, price) => (
   `<li class="event__offer">
       <span class="event__offer-title">${offer}</span>
@@ -26,7 +28,7 @@ const checkFavorite = (result) => {
   return favorite;
 };
 
-export const routePoint = (data) => {
+const createRoutePointTemplate = (data) => {
   const {eventDate, eventIcon, eventType, eventCity, eventTimeStart, eventTimeEnd, travelTime, eventPrice, eventOffer, isFavorite} = data;
   return `<li class="trip-events__item">
     <div class="event">
@@ -62,3 +64,26 @@ export const routePoint = (data) => {
     </div>
   </li>`;
 };
+
+export default class RoutePoint {
+  constructor(data) {
+    this._data = data;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createRoutePointTemplate(this._data);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

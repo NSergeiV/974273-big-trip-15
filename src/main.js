@@ -6,12 +6,12 @@ import {headerFilter} from './view/header-filter.js';
 import {mainTripSort} from './view/main-sort.js';
 import {listPoints} from './view/list.js';
 import {generateTask} from './mock/task.js';
-import {compare, renderElement, RenderPosition} from './utils.js';
+import {compare, renderElement, RenderPosition, renderTemplate} from './utils.js';
 import {formEditingPoint} from './view/form-editing-point.js';
 import {eventSectionOffers} from './view/event-section-offers.js';
 import {eventSectionDestination} from './view/event-section-destination.js';
 import {eventOfferSelector} from './view/event-offer-selector.js';
-import {routePoint} from './view/route-point.js';
+import RoutePointView from './view/route-point.js';
 
 const TASK_COUNT = 20;
 
@@ -26,30 +26,31 @@ const siteHeaderElementNavigation = siteHeader.querySelector('.trip-controls__na
 const siteHeaderElementFilter = siteHeader.querySelector('.trip-controls__filters');
 const siteMainSection = siteBlockMain.querySelector('.trip-events');
 
-renderElement(siteHeaderElementTripMain, createHeaderRoutePriceTemplate(), RenderPosition.AFTERBEGIN);
+renderTemplate(siteHeaderElementTripMain, createHeaderRoutePriceTemplate(), 'afterbegin');
+
 renderElement(siteHeaderElementNavigation, new HeaderMenu().getElement(), RenderPosition.BEFOREEND);
-renderElement(siteHeaderElementFilter, headerFilter(), RenderPosition.BEFOREEND);
-renderElement(siteMainSection, mainTripSort(), RenderPosition.AFTERBEGIN);
-renderElement(siteMainSection, listPoints(), RenderPosition.BEFOREEND);
+renderTemplate(siteHeaderElementFilter, headerFilter(), 'beforeend');
+renderTemplate(siteMainSection, mainTripSort(), 'afterbegin');
+renderTemplate(siteMainSection, listPoints(), 'beforeend');
 
 const tripEventsList = siteMainSection.querySelector('.trip-events__list');
 
-renderElement(tripEventsList, formEditingPoint(tasksSort[0]), RenderPosition.AFTERBEGIN);
+renderTemplate(tripEventsList, formEditingPoint(tasksSort[0]), 'afterbegin');
 const eventDetails = document.querySelector('.event__details');
 
 if (tasksSort[0].eventOffer.length !== 0) {
-  renderElement(eventDetails, eventSectionOffers(), RenderPosition.AFTERBEGIN);
+  renderTemplate(eventDetails, eventSectionOffers(), 'afterbegin');
   const eventAvailableOffers = eventDetails.querySelector('.event__available-offers');
   const offers = tasksSort[0].eventOffer;
   offers.forEach((offer) => {
     const key = Object.keys(offer);
     const property = Object.values(offer);
-    renderElement(eventAvailableOffers, eventOfferSelector(key[0], property[0]), RenderPosition.AFTERBEGIN);
+    renderTemplate(eventAvailableOffers, eventOfferSelector(key[0], property[0]), 'afterbegin');
   });
 }
 
 if (tasksSort[0].description.length !== 0 || tasksSort[0].eventPhoto !== null) {
-  renderElement(eventDetails, eventSectionDestination(tasksSort[0].description), RenderPosition.BEFOREEND);
+  renderTemplate(eventDetails, eventSectionDestination(tasksSort[0].description), 'beforeend');
   if (tasksSort[0].eventPhoto !== null) {
     const eventPhotosTape = eventDetails.querySelector('.event__photos-tape');
     const photos = tasksSort[0].eventPhoto;
@@ -64,7 +65,7 @@ if (tasksSort[0].description.length !== 0 || tasksSort[0].eventPhoto !== null) {
 }
 
 for (let i = 1; i < tasksSort.length; i++) {
-  renderElement(tripEventsList, routePoint(tasksSort[i]), RenderPosition.BEFOREEND);
+  renderElement(tripEventsList, new RoutePointView(tasksSort[i]).getElement(), RenderPosition.BEFOREEND);
 }
 
 const configFlatpickr = {
