@@ -7,10 +7,10 @@ import MainTripSortView from './view/main-sort.js';
 import ListPointsView from './view/list.js';
 import {generateTask} from './mock/task.js';
 import {compare, renderElement, RenderPosition} from './utils.js';
-import FormEditingPointView from './view/form-editing-point.js';
-import EventSectionOffersView from './view/event-section-offers.js';
-import EventSectionDestinationView from './view/event-section-destination.js';
-import EventOfferSelectorView from './view/event-offer-selector.js';
+// import FormEditingPointView from './view/form-editing-point.js';
+// import EventSectionOffersView from './view/event-section-offers.js';
+// import EventSectionDestinationView from './view/event-section-destination.js';
+// import EventOfferSelectorView from './view/event-offer-selector.js';
 import RoutePointView from './view/route-point.js';
 
 const TASK_COUNT = 20;
@@ -34,6 +34,7 @@ renderElement(siteMainSection, new MainTripSortView().getElement(), RenderPositi
 renderElement(siteMainSection, new ListPointsView().getElement(), RenderPosition.BEFOREEND);
 
 const tripEventsList = siteMainSection.querySelector('.trip-events__list');
+/*
 renderElement(tripEventsList, new FormEditingPointView(tasksSort[0]).getElement(), RenderPosition.AFTERBEGIN);
 
 const eventDetails = document.querySelector('.event__details');
@@ -60,8 +61,8 @@ if (tasksSort[0].description.length !== 0 || tasksSort[0].eventPhoto !== null) {
     });
   }
 }
-
-for (let i = 1; i < tasksSort.length; i++) {
+*/
+for (let i = 0; i < tasksSort.length; i++) {
   renderElement(tripEventsList, new RoutePointView(tasksSort[i]).getElement(), RenderPosition.BEFOREEND);
 }
 
