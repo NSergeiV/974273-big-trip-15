@@ -5,13 +5,14 @@ import HeaderMenuView from './view/header-menu.js';
 import HeaderFilterView from './view/header-filter.js';
 import MainTripSortView from './view/main-sort.js';
 import ListPointsView from './view/list.js';
+import RoutePointView from './view/route-point.js';
 import {generateTask} from './mock/task.js';
 import {compare, renderElement, RenderPosition} from './utils.js';
-// import FormEditingPointView from './view/form-editing-point.js';
-// import EventSectionOffersView from './view/event-section-offers.js';
-// import EventSectionDestinationView from './view/event-section-destination.js';
-// import EventOfferSelectorView from './view/event-offer-selector.js';
-import RoutePointView from './view/route-point.js';
+import FormEditingPointView from './view/form-editing-point.js';
+import EventSectionOffersView from './view/event-section-offers.js';
+import EventSectionDestinationView from './view/event-section-destination.js';
+import EventOfferSelectorView from './view/event-offer-selector.js';
+import RoutePointDataView from './view/route-point-data.js';
 
 const TASK_COUNT = 20;
 
@@ -34,37 +35,59 @@ renderElement(siteMainSection, new MainTripSortView().getElement(), RenderPositi
 renderElement(siteMainSection, new ListPointsView().getElement(), RenderPosition.BEFOREEND);
 
 const tripEventsList = siteMainSection.querySelector('.trip-events__list');
-/*
-renderElement(tripEventsList, new FormEditingPointView(tasksSort[0]).getElement(), RenderPosition.AFTERBEGIN);
 
-const eventDetails = document.querySelector('.event__details');
-if (tasksSort[0].eventOffer.length !== 0) {
-  renderElement(eventDetails, new EventSectionOffersView().getElement(), RenderPosition.AFTERBEGIN);
-  const eventAvailableOffers = eventDetails.querySelector('.event__available-offers');
-  const offers = tasksSort[0].eventOffer;
-  offers.forEach((offer) => {
-    renderElement(eventAvailableOffers, new EventOfferSelectorView(offer).getElement(), RenderPosition.AFTERBEGIN);
-  });
-}
-
-if (tasksSort[0].description.length !== 0 || tasksSort[0].eventPhoto !== null) {
-  renderElement(eventDetails, new EventSectionDestinationView(tasksSort[0].description).getElement(), RenderPosition.BEFOREEND);
-  if (tasksSort[0].eventPhoto !== null) {
-    const eventPhotosTape = eventDetails.querySelector('.event__photos-tape');
-    const photos = tasksSort[0].eventPhoto;
-    photos.forEach((photo) => {
-      const newPhoto = document.createElement('img');
-      newPhoto.classList.add('event__photo');
-      newPhoto.setAttribute('src', photo);
-      newPhoto.setAttribute('alt', 'Event photo');
-      eventPhotosTape.append(newPhoto);
+const createEventOffer = (form) => {
+  const eventDetails = form.getElement().querySelector('.event__details');
+  if (form._data.eventOffer.length !== 0) {
+    renderElement(eventDetails, new EventSectionOffersView().getElement(), RenderPosition.AFTERBEGIN);
+    const eventAvailableOffers = eventDetails.querySelector('.event__available-offers');
+    const offers = form._data.eventOffer;
+    offers.forEach((offer) => {
+      renderElement(eventAvailableOffers, new EventOfferSelectorView(offer).getElement(), RenderPosition.AFTERBEGIN);
     });
   }
-}
-*/
-for (let i = 0; i < tasksSort.length; i++) {
-  renderElement(tripEventsList, new RoutePointView(tasksSort[i]).getElement(), RenderPosition.BEFOREEND);
-}
+  if (form._data.description.length !== 0 || form._data.eventPhoto !== null) {
+    renderElement(eventDetails, new EventSectionDestinationView(form._data.description).getElement(), RenderPosition.BEFOREEND);
+    if (form._data.eventPhoto !== null) {
+      const eventPhotosTape = eventDetails.querySelector('.event__photos-tape');
+      const photos = form._data.eventPhoto;
+      photos.forEach((photo) => {
+        const newPhoto = document.createElement('img');
+        newPhoto.classList.add('event__photo');
+        newPhoto.setAttribute('src', photo);
+        newPhoto.setAttribute('alt', 'Event photo');
+        eventPhotosTape.append(newPhoto);
+      });
+    }
+  }
+};
+
+const createRoutePoint = (pointListElement, data) => {
+  const pointComponent = new RoutePointDataView(data);
+  const pointFormComponent = new FormEditingPointView(data);
+  createEventOffer(pointFormComponent);
+
+  const replacePointToForm = () => {
+    pointListElement.replaceChild(pointFormComponent.getElement(), pointComponent.getElement());
+  };
+
+  const replaceFormToPoint = () => {
+    pointListElement.replaceChild(pointComponent.getElement(), pointFormComponent.getElement());
+  };
+
+  pointComponent.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
+    replacePointToForm();
+  });
+
+  pointFormComponent.getElement().querySelector('form').addEventListener('submit', () => {
+    replaceFormToPoint();
+  });
+
+  renderElement(pointListElement, pointComponent.getElement(), RenderPosition.BEFOREEND);
+  renderElement(tripEventsList, pointListElement, RenderPosition.BEFOREEND);
+};
+
+tasksSort.forEach((task) => createRoutePoint(new RoutePointView().getElement(), task));
 
 const configFlatpickr = {
   enableTime: true,
