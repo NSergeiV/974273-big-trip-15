@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-const getRandomInteger = (a = 0, b = 1) => {
+export const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
 
@@ -32,7 +32,7 @@ const calculate = (d, h, m) => {
   }
 };
 
-const takeDate = () => {
+export const takeDate = () => {
   const dateStart = generateDate();
   const eventDate = dayjs(dateStart).format('MMM DD');
   const eventTimeStart = dayjs(dateStart).format('HH:mm');
@@ -53,9 +53,28 @@ const takeDate = () => {
   };
 };
 
-const compare = (a, b) => {
+export const compare = (a, b) => {
   const rezalt = (dayjs(a).isAfter(dayjs(b))) ? 1 : -1;
   return rezalt;
 };
+export const RenderPosition = {
+  AFTERBEGIN: 'afterbegin',
+  BEFOREEND: 'beforeend',
+};
 
-export {getRandomInteger, compare, takeDate};
+export const renderElement = (container, element, place) => {
+  switch (place) {
+    case RenderPosition.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case RenderPosition.BEFOREEND:
+      container.append(element);
+      break;
+  }
+};
+
+export const createElement = (template) => {
+  const newElement = document.createElement('div');
+  newElement.innerHTML = template;
+  return newElement.firstChild;
+};

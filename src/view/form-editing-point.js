@@ -1,5 +1,6 @@
+import {createElement} from '../utils.js';
 
-export const formEditingPoint = (data) => {
+const createFormEditingPointTemplate = (data) => {
   const {eventType, eventIcon} = data;
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -105,3 +106,26 @@ export const formEditingPoint = (data) => {
     </form>
   </li>`;
 };
+
+export default class FormEditingPoint {
+  constructor(data) {
+    this._data = data;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFormEditingPointTemplate(this._data);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
