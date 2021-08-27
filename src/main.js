@@ -69,10 +69,17 @@ const createRoutePoint = (pointListElement, data) => {
 
   const replacePointToForm = () => {
     pointListElement.replaceChild(pointFormComponent.getElement(), pointComponent.getElement());
+
   };
 
   const replaceFormToPoint = () => {
     pointListElement.replaceChild(pointComponent.getElement(), pointFormComponent.getElement());
+  };
+
+  const onEscPress = (evt) => {
+    if (evt.keyCode === 27) {
+      replaceFormToPoint();
+    }
   };
 
   pointComponent.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
@@ -82,6 +89,8 @@ const createRoutePoint = (pointListElement, data) => {
   pointFormComponent.getElement().querySelector('form').addEventListener('submit', () => {
     replaceFormToPoint();
   });
+
+  pointFormComponent.getElement().querySelector('form').addEventListener('keydown', onEscPress);
 
   renderElement(pointListElement, pointComponent.getElement(), RenderPosition.BEFOREEND);
   renderElement(tripEventsList, pointListElement, RenderPosition.BEFOREEND);
