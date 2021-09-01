@@ -73,20 +73,19 @@ if (tasks.length === 0) {
     const pointFormComponent = new FormEditingPointView(data);
     createEventOffer(pointFormComponent);
 
-    const replacePointToForm = () => {
-      pointListElement.replaceChild(pointFormComponent.getElement(), pointComponent.getElement());
-
-    };
-
-    const replaceFormToPoint = () => {
-      pointListElement.replaceChild(pointComponent.getElement(), pointFormComponent.getElement());
-    };
-
     const configFlatpickr = {
       enableTime: true,
       altInput: true,
       altFormat: 'd/m/y H:i',
       dateFormat: 'd/m/y H:i',
+    };
+
+    const replacePointToForm = () => {
+      pointListElement.replaceChild(pointFormComponent.getElement(), pointComponent.getElement());
+    };
+
+    const replaceFormToPoint = () => {
+      pointListElement.replaceChild(pointComponent.getElement(), pointFormComponent.getElement());
     };
 
     const onEscPress = (evt) => {
@@ -97,20 +96,18 @@ if (tasks.length === 0) {
       }
     };
 
-    // pointComponent.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
     pointComponent.setEditClickHandler(() => {
       replacePointToForm();
-      // document.addEventListener('keydown', onEsc1Press);
+      document.addEventListener('keydown', onEscPress);
       flatpickr(document.querySelectorAll('.event__input--time'), configFlatpickr);
     });
 
-    pointFormComponent.getElement().querySelector('form').addEventListener('submit', (evt) => {
-      evt.preventDefault();
+    pointFormComponent.setFormSubmitHandler(() => {
       replaceFormToPoint();
       document.removeEventListener('keydown', onEscPress);
     });
 
-    pointFormComponent.getElement().querySelector('form').querySelector('.event__rollup-btn').addEventListener('click', () => {
+    pointFormComponent.setFormCloseHandler(() => {
       replaceFormToPoint();
       document.removeEventListener('keydown', onEscPress);
     });
