@@ -1,4 +1,4 @@
-import {createElement} from '../utils.js';
+import AbstractView from './abstract.js';
 
 const createFormEditingPointTemplate = (data) => {
   const {eventType, eventIcon} = data;
@@ -110,25 +110,13 @@ const createFormEditingPointTemplate = (data) => {
   </li>`;
 };
 
-export default class FormEditingPoint {
+export default class FormEditingPoint extends AbstractView {
   constructor(data) {
+    super();
     this._data = data;
-    this._element = null;
   }
 
   getTemplate() {
     return createFormEditingPointTemplate(this._data);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

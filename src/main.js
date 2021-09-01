@@ -97,9 +97,10 @@ if (tasks.length === 0) {
       }
     };
 
-    pointComponent.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
+    // pointComponent.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
+    pointComponent.setEditClickHandler(() => {
       replacePointToForm();
-      document.addEventListener('keydown', onEscPress);
+      // document.addEventListener('keydown', onEsc1Press);
       flatpickr(document.querySelectorAll('.event__input--time'), configFlatpickr);
     });
 
