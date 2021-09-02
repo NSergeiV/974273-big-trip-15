@@ -7,7 +7,8 @@ import MainTripSortView from './view/main-sort.js';
 import ListPointsView from './view/list.js';
 import RoutePointView from './view/route-point.js';
 import {generateTask} from './mock/task.js';
-import {compare, renderElement, RenderPosition} from './utils.js';
+import {renderElement, RenderPosition, replace} from './utils/render.js';
+import {compare} from './utils/task.js';
 import FormEditingPointView from './view/form-editing-point.js';
 import EventSectionOffersView from './view/event-section-offers.js';
 import EventSectionDestinationView from './view/event-section-destination.js';
@@ -29,31 +30,31 @@ const siteHeaderElementFilter = siteHeader.querySelector('.trip-controls__filter
 const siteMainSection = siteBlockMain.querySelector('.trip-events');
 
 if (tasks.length === 0) {
-  renderElement(siteHeaderElementNavigation, new HeaderMenuView().getElement(), RenderPosition.BEFOREEND);
-  renderElement(siteHeaderElementFilter, new HeaderFilterView().getElement(), RenderPosition.BEFOREEND);
-  renderElement(siteMainSection, new ListEmptyView().getElement(), RenderPosition.BEFOREEND);
+  renderElement(siteHeaderElementNavigation, new HeaderMenuView(), RenderPosition.BEFOREEND);
+  renderElement(siteHeaderElementFilter, new HeaderFilterView(), RenderPosition.BEFOREEND);
+  renderElement(siteMainSection, new ListEmptyView(), RenderPosition.BEFOREEND);
 } else {
-  renderElement(siteHeaderElementTripMain, new HeaderRoutePriceView().getElement(), RenderPosition.AFTERBEGIN);
+  renderElement(siteHeaderElementTripMain, new HeaderRoutePriceView(), RenderPosition.AFTERBEGIN);
 
-  renderElement(siteHeaderElementNavigation, new HeaderMenuView().getElement(), RenderPosition.BEFOREEND);
-  renderElement(siteHeaderElementFilter, new HeaderFilterView().getElement(), RenderPosition.BEFOREEND);
-  renderElement(siteMainSection, new MainTripSortView().getElement(), RenderPosition.AFTERBEGIN);
-  renderElement(siteMainSection, new ListPointsView().getElement(), RenderPosition.BEFOREEND);
+  renderElement(siteHeaderElementNavigation, new HeaderMenuView(), RenderPosition.BEFOREEND);
+  renderElement(siteHeaderElementFilter, new HeaderFilterView(), RenderPosition.BEFOREEND);
+  renderElement(siteMainSection, new MainTripSortView(), RenderPosition.AFTERBEGIN);
+  renderElement(siteMainSection, new ListPointsView(), RenderPosition.BEFOREEND);
 
   const tripEventsList = siteMainSection.querySelector('.trip-events__list');
 
   const createEventOffer = (form) => {
     const eventDetails = form.getElement().querySelector('.event__details');
     if (form._data.eventOffer.length !== 0) {
-      renderElement(eventDetails, new EventSectionOffersView().getElement(), RenderPosition.AFTERBEGIN);
+      renderElement(eventDetails, new EventSectionOffersView(), RenderPosition.AFTERBEGIN);
       const eventAvailableOffers = eventDetails.querySelector('.event__available-offers');
       const offers = form._data.eventOffer;
       offers.forEach((offer) => {
-        renderElement(eventAvailableOffers, new EventOfferSelectorView(offer).getElement(), RenderPosition.AFTERBEGIN);
+        renderElement(eventAvailableOffers, new EventOfferSelectorView(offer), RenderPosition.AFTERBEGIN);
       });
     }
     if (form._data.description.length !== 0 || form._data.eventPhoto !== null) {
-      renderElement(eventDetails, new EventSectionDestinationView(form._data.description).getElement(), RenderPosition.BEFOREEND);
+      renderElement(eventDetails, new EventSectionDestinationView(form._data.description), RenderPosition.BEFOREEND);
       if (form._data.eventPhoto !== null) {
         const eventPhotosTape = eventDetails.querySelector('.event__photos-tape');
         const photos = form._data.eventPhoto;
@@ -81,11 +82,11 @@ if (tasks.length === 0) {
     };
 
     const replacePointToForm = () => {
-      pointListElement.replaceChild(pointFormComponent.getElement(), pointComponent.getElement());
+      replace(pointFormComponent, pointComponent);
     };
 
     const replaceFormToPoint = () => {
-      pointListElement.replaceChild(pointComponent.getElement(), pointFormComponent.getElement());
+      replace(pointComponent, pointFormComponent);
     };
 
     const onEscPress = (evt) => {
@@ -112,7 +113,7 @@ if (tasks.length === 0) {
       document.removeEventListener('keydown', onEscPress);
     });
 
-    renderElement(pointListElement, pointComponent.getElement(), RenderPosition.BEFOREEND);
+    renderElement(pointListElement, pointComponent, RenderPosition.BEFOREEND);
     renderElement(tripEventsList, pointListElement, RenderPosition.BEFOREEND);
   };
 
