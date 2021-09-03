@@ -1,4 +1,4 @@
-import {createElement} from '../utils.js';
+import AbstractView from './abstract.js';
 
 const createFormEditingPointTemplate = (data) => {
   const {eventType, eventIcon} = data;
@@ -110,25 +110,36 @@ const createFormEditingPointTemplate = (data) => {
   </li>`;
 };
 
-export default class FormEditingPoint {
+export default class FormEditingPoint extends AbstractView {
   constructor(data) {
+    super();
     this._data = data;
-    this._element = null;
+
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._formCloseHandler = this._formCloseHandler.bind(this);
   }
 
   getTemplate() {
     return createFormEditingPointTemplate(this._data);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit();
   }
 
-  removeElement() {
-    this._element = null;
+  _formCloseHandler(evt) {
+    evt.preventDefault();
+    this._callback.formClose();
+  }
+
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().querySelector('form').addEventListener('submit', this._formSubmitHandler);
+  }
+
+  setFormCloseHandler(callback) {
+    this._callback.formClose = callback;
+    this.getElement().querySelector('form').querySelector('.event__rollup-btn').addEventListener('click', this._formCloseHandler);
   }
 }

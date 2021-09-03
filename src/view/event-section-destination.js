@@ -1,4 +1,4 @@
-import {createElement} from '../utils.js';
+import AbstractView from './abstract.js';
 
 const createEventSectionDestinationTemplate = (description) => (
   `<section class="event__section  event__section--destination">
@@ -13,25 +13,13 @@ const createEventSectionDestinationTemplate = (description) => (
   </section>`
 );
 
-export default class EventSectionDestination {
+export default class EventSectionDestination extends AbstractView {
   constructor(data) {
+    super();
     this._data = data;
-    this._element = null;
   }
 
   getTemplate() {
     return createEventSectionDestinationTemplate(this._data);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
