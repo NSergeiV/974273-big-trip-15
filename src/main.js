@@ -3,24 +3,26 @@ import flatpickr from 'flatpickr';
 import HeaderRoutePriceView from './view/header-route-price.js';
 import HeaderMenuView from './view/header-menu.js';
 import HeaderFilterView from './view/header-filter.js';
-import MainTripSortView from './view/main-sort.js';
-import ListPointsView from './view/list.js';
-import RoutePointView from './view/route-point.js';
+import RoutePresenter from './presenter/route.js';
+//import MainTripSortView from './view/main-sort.js';
+//import ListPointsView from './view/list.js';
+//import RoutePointView from './view/route-point.js';
 import {generateTask} from './mock/task.js';
 import {renderElement, RenderPosition, replace} from './utils/render.js';
-import {compare} from './utils/task.js';
-import FormEditingPointView from './view/form-editing-point.js';
+// import {compare} from './utils/task.js';
+// import FormEditingPointView from './view/form-editing-point.js';
 import EventSectionOffersView from './view/event-section-offers.js';
 import EventSectionDestinationView from './view/event-section-destination.js';
 import EventOfferSelectorView from './view/event-offer-selector.js';
-import RoutePointDataView from './view/route-point-data.js';
-import ListEmptyView from './view/list-empty.js';
+// import RoutePointDataView from './view/route-point-data.js';
+//import ListEmptyView from './view/list-empty.js';
 
 const TASK_COUNT = 20;
 
 const tasks = new Array(TASK_COUNT).fill().map(generateTask);
+console.log(tasks);
 
-const tasksSort = tasks.slice().sort((a, b) => compare(a.dateStart, b.dateStart));
+// const tasksSort = tasks.slice().sort((a, b) => compare(a.dateStart, b.dateStart));
 
 const siteHeader = document.querySelector('header');
 const siteBlockMain = document.querySelector('main');
@@ -29,20 +31,21 @@ const siteHeaderElementNavigation = siteHeader.querySelector('.trip-controls__na
 const siteHeaderElementFilter = siteHeader.querySelector('.trip-controls__filters');
 const siteMainSection = siteBlockMain.querySelector('.trip-events');
 
-if (tasks.length === 0) {
-  renderElement(siteHeaderElementNavigation, new HeaderMenuView(), RenderPosition.BEFOREEND);
-  renderElement(siteHeaderElementFilter, new HeaderFilterView(), RenderPosition.BEFOREEND);
-  renderElement(siteMainSection, new ListEmptyView(), RenderPosition.BEFOREEND);
-} else {
+renderElement(siteHeaderElementNavigation, new HeaderMenuView(), RenderPosition.BEFOREEND);
+renderElement(siteHeaderElementFilter, new HeaderFilterView(), RenderPosition.BEFOREEND);
+
+if (tasks.length !== 0) {
   renderElement(siteHeaderElementTripMain, new HeaderRoutePriceView(), RenderPosition.AFTERBEGIN);
+}
 
-  renderElement(siteHeaderElementNavigation, new HeaderMenuView(), RenderPosition.BEFOREEND);
-  renderElement(siteHeaderElementFilter, new HeaderFilterView(), RenderPosition.BEFOREEND);
-  renderElement(siteMainSection, new MainTripSortView(), RenderPosition.AFTERBEGIN);
-  renderElement(siteMainSection, new ListPointsView(), RenderPosition.BEFOREEND);
+  const routePresenter = new RoutePresenter(siteBlockMain);
 
-  const tripEventsList = siteMainSection.querySelector('.trip-events__list');
+  routePresenter.init(tasks);
+  //renderElement(siteMainSection, new MainTripSortView(), RenderPosition.AFTERBEGIN);
+  //renderElement(siteMainSection, new ListPointsView(), RenderPosition.BEFOREEND);
 
+  // const tripEventsList = siteMainSection.querySelector('.trip-events__list');
+/*
   const createEventOffer = (form) => {
     const eventDetails = form.getElement().querySelector('.event__details');
     if (form._data.eventOffer.length !== 0) {
@@ -118,4 +121,4 @@ if (tasks.length === 0) {
   };
 
   tasksSort.forEach((task) => createRoutePoint(new RoutePointView().getElement(), task));
-}
+*/
