@@ -13,56 +13,65 @@ export default class Point {
 
     this._pointComponent = null;
     this._pointFormComponent = null;
-  }
 
-  init(pointListElement, data) {
-
-    this._pointComponent = new RoutePointDataView(data);
-    const pointFormComponent = new FormEditingPointView(data);
-    this._createEventOffer(pointFormComponent);
-
-    const configFlatpickr = {
+    this._configFlatpickr = {
       enableTime: true,
       altInput: true,
       altFormat: 'd/m/y H:i',
       dateFormat: 'd/m/y H:i',
     };
 
-    const replacePointToForm = () => {
-      replace(pointFormComponent, pointComponent);
-    };
+    this._onEscPress = this._onEscPress.bind(this);
+    this._handleEditClick = this._handleEditClick.bind(this);
+    this._handleFormSubmit = this._handleFormSubmit.bind(this);
+    this._handleFormClose = this._handleFormClose.bind(this);
+  }
 
-    const replaceFormToPoint = () => {
-      replace(pointComponent, pointFormComponent);
-    };
+  init(pointListElement, data) {
 
-    const onEscPress = (evt) => {
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        replaceFormToPoint();
-        document.removeEventListener('keydown', onEscPress);
-      }
-    };
+    this._pointComponent = new RoutePointDataView(data);
+    this._pointFormComponent = new FormEditingPointView(data);
+    this._createEventOffer(this._pointFormComponent);
 
-    pointComponent.setEditClickHandler(() => {
-      replacePointToForm();
-      document.addEventListener('keydown', onEscPress);
-      flatpickr(document.querySelectorAll('.event__input--time'), configFlatpickr);
-    });
+    this._pointComponent.setEditClickHandler(this._handleEditClick);
 
-    pointFormComponent.setFormSubmitHandler(() => {
-      replaceFormToPoint();
-      document.removeEventListener('keydown', onEscPress);
-    });
+    this._pointFormComponent.setFormSubmitHandler(this._handleFormSubmit);
 
-    pointFormComponent.setFormCloseHandler(() => {
-      replaceFormToPoint();
-      document.removeEventListener('keydown', onEscPress);
-    });
+    this._pointFormComponent.setFormCloseHandler(this._handleFormClose);
 
-    renderElement(pointListElement, pointComponent, RenderPosition.BEFOREEND);
+    renderElement(pointListElement, this._pointComponent, RenderPosition.BEFOREEND);
 
     renderElement(this._pointListContainer, pointListElement, RenderPosition.BEFOREEND);
+  }
+
+  _replacePointToForm() {
+    replace(this._pointFormComponent, this._pointComponent);
+    document.addEventListener('keydown', this._onEscPress);
+    flatpickr(document.querySelectorAll('.event__input--time'), this._configFlatpickr);
+  }
+
+  _replaceFormToPoint() {
+    replace(this._pointComponent, this._pointFormComponent);
+    document.removeEventListener('keydown', this._onEscPress);
+  }
+
+  _onEscPress(evt) {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      this._replaceFormToPoint();
+    }
+  }
+
+  _handleEditClick() {
+    this._replacePointToForm();
+  }
+
+  _handleFormSubmit() {
+    this._replaceFormToPoint();
+  }
+
+  _handleFormClose() {
+    this._replaceFormToPoint();
   }
 
   _createEventOffer(form) {
