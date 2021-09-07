@@ -8,12 +8,12 @@ import RoutePresenter from './presenter/route.js';
 //import ListPointsView from './view/list.js';
 //import RoutePointView from './view/route-point.js';
 import {generateTask} from './mock/task.js';
-import {renderElement, RenderPosition, replace} from './utils/render.js';
+import {renderElement, RenderPosition} from './utils/render.js';
 // import {compare} from './utils/task.js';
 // import FormEditingPointView from './view/form-editing-point.js';
-import EventSectionOffersView from './view/event-section-offers.js';
-import EventSectionDestinationView from './view/event-section-destination.js';
-import EventOfferSelectorView from './view/event-offer-selector.js';
+// import EventSectionOffersView from './view/event-section-offers.js';
+// import EventSectionDestinationView from './view/event-section-destination.js';
+// import EventOfferSelectorView from './view/event-offer-selector.js';
 // import RoutePointDataView from './view/route-point-data.js';
 //import ListEmptyView from './view/list-empty.js';
 

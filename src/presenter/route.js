@@ -1,25 +1,24 @@
-import flatpickr from 'flatpickr';
+import PointPresenter from './point.js';
 import MainTripSortView from '../view/main-sort.js';
 import ListPointsView from '../view/list.js';
-import {renderElement, RenderPosition} from '../utils/render.js';
+import {renderElement, RenderPosition, replace} from '../utils/render.js';
 import ListEmptyView from '../view/list-empty.js';
 import {compare} from '../utils/task.js';
 import RoutePointView from '../view/route-point.js';
-import RoutePointDataView from '../view/route-point-data.js';
-import FormEditingPointView from '../view/form-editing-point.js';
+// import RoutePointDataView from '../view/route-point-data.js';
+// import FormEditingPointView from '../view/form-editing-point.js';
 
 export default class Route {
   constructor(routeContainer) {
     this._routeContainer = routeContainer;
     this._siteMainSection = this._routeContainer.querySelector('.trip-events');
-    this._tripEventsList = this._siteMainSection.querySelector('.trip-events__list');
 
     this._mainTripSort = new MainTripSortView();
     this._listPointsView = new ListPointsView();
     this._listEmpty = new ListEmptyView();
-    this._routePoint = new RoutePointView();
-    //this._routePointDataView = new RoutePointDataView();
-    //this._formEditingPoint = new FormEditingPointView();
+    // this._routePoint = new RoutePointView();
+    // this._routePointDataView = new RoutePointDataView();
+    // this._formEditingPoint = new FormEditingPointView();
   }
 
   init(boardTasks) {
@@ -35,9 +34,14 @@ export default class Route {
   }
 
   _renderPoint(pointListElement, data) {
-    this._pointComponent = new RoutePointDataView(data);
-    this._pointFormComponent = new FormEditingPointView(data);
-    //createEventOffer(this._pointFormComponent);
+    const pointPresenter = new PointPresenter(this._tripEventsList);
+    pointPresenter.init(pointListElement, data);
+    /*
+    console.log(pointListElement);
+    console.log(data);
+    const pointComponent = new RoutePointDataView(data);
+    const pointFormComponent = new FormEditingPointView(data);
+    // createEventOffer(pointFormComponent);
 
     const configFlatpickr = {
       enableTime: true,
@@ -46,12 +50,14 @@ export default class Route {
       dateFormat: 'd/m/y H:i',
     };
 
+    console.log('ПРОВАЛИЛОСЬ');
+
     const replacePointToForm = () => {
-      replace(this._pointFormComponent, this._pointComponent);
+      replace(pointFormComponent, pointComponent);
     };
 
     const replaceFormToPoint = () => {
-      replace(this._pointComponent, this._pointFormComponent);
+      replace(pointComponent, pointFormComponent);
     };
 
     const onEscPress = (evt) => {
@@ -62,29 +68,36 @@ export default class Route {
       }
     };
 
-    this._pointComponent.setEditClickHandler(() => {
+    console.log('ПРОВАЛИЛОСЬ');
+
+    pointComponent.setEditClickHandler(() => {
       replacePointToForm();
       document.addEventListener('keydown', onEscPress);
       flatpickr(document.querySelectorAll('.event__input--time'), configFlatpickr);
     });
 
-    this._pointFormComponent.setFormSubmitHandler(() => {
+    pointFormComponent.setFormSubmitHandler(() => {
       replaceFormToPoint();
       document.removeEventListener('keydown', onEscPress);
     });
 
-    this._pointFormComponent.setFormCloseHandler(() => {
+    pointFormComponent.setFormCloseHandler(() => {
       replaceFormToPoint();
       document.removeEventListener('keydown', onEscPress);
     });
 
-    renderElement(pointListElement, this._pointComponent, RenderPosition.BEFOREEND);
+    console.log('ПРОВАЛИЛОСЬ');
+
+    renderElement(pointListElement, pointComponent, RenderPosition.BEFOREEND);
+    console.log('ПРОВАЛИЛОСЬ');
+    console.log(this._tripEventsList);
     renderElement(this._tripEventsList, pointListElement, RenderPosition.BEFOREEND);
+    console.log('ПРОВАЛИЛОСЬ');
+*/
   }
 
   _renderRoute() {
-    console.log(this._routePoint);
-    this._tasksSort.forEach((task) => this._renderPoint(this._routePoint.getElement(), task));
+    this._tasksSort.forEach((task) => this._renderPoint(new RoutePointView().getElement(), task));
   }
 
   _renderNoRoute() {
@@ -98,6 +111,8 @@ export default class Route {
     }
       renderElement(this._siteMainSection, this._mainTripSort, RenderPosition.AFTERBEGIN);
       renderElement(this._siteMainSection, this._listPointsView, RenderPosition.BEFOREEND);
+      this._tripEventsList = this._siteMainSection.querySelector('.trip-events__list');
+      console.log(this._tripEventsList);
       this._renderSort();
       this._renderRoute();
   }
