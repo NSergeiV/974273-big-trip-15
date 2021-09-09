@@ -69,6 +69,7 @@ export default class RoutePointData extends AbstractView {
     this._data = data;
 
     this._editClickHandler = this._editClickHandler.bind(this);
+    this._editClickFavorite = this._editClickFavorite.bind(this);
   }
 
   getTemplate() {
@@ -80,8 +81,18 @@ export default class RoutePointData extends AbstractView {
     this._callback.editClick();
   }
 
+  _editClickFavorite(evt) {
+    evt.preventDefault();
+    this._callback.editClickFavorite();
+  }
+
   setEditClickHandler(callback) {
     this._callback.editClick = callback;
     this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._editClickHandler);
+  }
+
+  setEditClickFavorite(callback) {
+    this._callback.editClickFavorite = callback;
+    this.getElement().querySelector('.event__favorite-btn').addEventListener('click', this._editClickFavorite);
   }
 }

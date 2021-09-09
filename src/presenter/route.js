@@ -18,6 +18,7 @@ export default class Route {
 
   init(boardTasks) {
     this._boardTasks = boardTasks.slice();
+    console.log(this._boardTasks);
 
     this._renderBoard();
   }

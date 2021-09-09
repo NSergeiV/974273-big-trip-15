@@ -25,23 +25,48 @@ export default class Point {
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleFormClose = this._handleFormClose.bind(this);
+    this._handleEditClickFavorite = this._handleEditClickFavorite.bind(this);
   }
 
   init(pointListElement, data) {
+    const prevPointComponent = this._pointComponent;
+    const prevPointFormComponent = this._pointFormComponent;
 
     this._pointComponent = new RoutePointDataView(data);
     this._pointFormComponent = new FormEditingPointView(data);
     this._createEventOffer(this._pointFormComponent);
 
     this._pointComponent.setEditClickHandler(this._handleEditClick);
+    this._pointComponent.setEditClickFavorite(this._handleEditClickFavorite)
 
     this._pointFormComponent.setFormSubmitHandler(this._handleFormSubmit);
 
     this._pointFormComponent.setFormCloseHandler(this._handleFormClose);
 
-    renderElement(pointListElement, this._pointComponent, RenderPosition.BEFOREEND);
+    // renderElement(pointListElement, this._pointComponent, RenderPosition.BEFOREEND);
+    // renderElement(this._pointListContainer, pointListElement, RenderPosition.BEFOREEND);
 
-    renderElement(this._pointListContainer, pointListElement, RenderPosition.BEFOREEND);
+    if (prevPointComponent === null || prevPointFormComponent === null) {
+      renderElement(pointListElement, this._pointComponent, RenderPosition.BEFOREEND);
+      renderElement(this._pointListContainer, pointListElement, RenderPosition.BEFOREEND);
+      return;
+    }
+
+    if (this._pointListContainer.getElement().contains(prevPointComponent.getElement())) {
+      replace(this._pointComponent, prevPointComponent);
+    }
+
+    if (this._pointListContainer.getElement().contains(prevPointFormComponent.getElement())) {
+      replace(this._pointFormComponent, prevPointFormComponent);
+    }
+
+    remove(prevPointComponent);
+    remove(prevPointFormComponent);
+  }
+
+  destroy() {
+    remove(this._pointComponent);
+    remove(this._pointFormComponent);
   }
 
   _replacePointToForm() {
@@ -64,6 +89,10 @@ export default class Point {
 
   _handleEditClick() {
     this._replacePointToForm();
+  }
+
+  _handleEditClickFavorite() {
+    console.log('ВСЕ ПОЛУЧИЛОСЬ');
   }
 
   _handleFormSubmit() {
