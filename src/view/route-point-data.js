@@ -22,7 +22,7 @@ const connect = (arrayOffers) => {
 
 const checkFavorite = (result) => {
   let favorite = null;
-  if (result !== 0) {
+  if (result) {
     favorite = 'event__favorite-btn--active';
   }
   return favorite;
@@ -83,7 +83,7 @@ export default class RoutePointData extends AbstractView {
 
   _editClickFavorite(evt) {
     evt.preventDefault();
-    this._callback.editClickFavorite();
+    this._callback.editClickFavorite(this._data);
   }
 
   setEditClickHandler(callback) {

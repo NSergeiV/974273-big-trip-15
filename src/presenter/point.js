@@ -2,17 +2,28 @@ import flatpickr from 'flatpickr';
 
 import RoutePointDataView from '../view/route-point-data.js';
 import FormEditingPointView from '../view/form-editing-point.js';
-import {renderElement, RenderPosition, replace} from '../utils/render.js';
+import {renderElement, RenderPosition, replace, remove} from '../utils/render.js';
 import EventSectionOffersView from '../view/event-section-offers.js';
 import EventOfferSelectorView from '../view/event-offer-selector.js';
 import EventSectionDestinationView from '../view/event-section-destination.js';
+import RoutePointView from '../view/route-point.js';
+
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
 
 export default class Point {
-  constructor(pointListContainer) {
+  constructor(pointListContainer, changeData, changeMode) {
     this._pointListContainer = pointListContainer;
+    this._changeData = changeData;
+    this._changeMode = changeMode;
+
+    this._routePointView = new RoutePointView();
 
     this._pointComponent = null;
     this._pointFormComponent = null;
+    this._mode = Mode.DEFAULT;
 
     this._configFlatpickr = {
       enableTime: true,
@@ -28,7 +39,7 @@ export default class Point {
     this._handleEditClickFavorite = this._handleEditClickFavorite.bind(this);
   }
 
-  init(pointListElement, data) {
+  init(data) {
     const prevPointComponent = this._pointComponent;
     const prevPointFormComponent = this._pointFormComponent;
 
@@ -37,26 +48,25 @@ export default class Point {
     this._createEventOffer(this._pointFormComponent);
 
     this._pointComponent.setEditClickHandler(this._handleEditClick);
-    this._pointComponent.setEditClickFavorite(this._handleEditClickFavorite)
+    this._pointComponent.setEditClickFavorite(this._handleEditClickFavorite);
 
     this._pointFormComponent.setFormSubmitHandler(this._handleFormSubmit);
 
     this._pointFormComponent.setFormCloseHandler(this._handleFormClose);
 
-    // renderElement(pointListElement, this._pointComponent, RenderPosition.BEFOREEND);
-    // renderElement(this._pointListContainer, pointListElement, RenderPosition.BEFOREEND);
-
     if (prevPointComponent === null || prevPointFormComponent === null) {
-      renderElement(pointListElement, this._pointComponent, RenderPosition.BEFOREEND);
-      renderElement(this._pointListContainer, pointListElement, RenderPosition.BEFOREEND);
+      renderElement(this._routePointView, this._pointComponent, RenderPosition.BEFOREEND);
+      renderElement(this._pointListContainer, this._routePointView, RenderPosition.BEFOREEND);
       return;
     }
 
-    if (this._pointListContainer.getElement().contains(prevPointComponent.getElement())) {
+    // if (this._pointListContainer.getElement().contains(prevPointComponent.getElement())) {
+    if (this._mode === Mode.DEFAULT) {
       replace(this._pointComponent, prevPointComponent);
     }
 
-    if (this._pointListContainer.getElement().contains(prevPointFormComponent.getElement())) {
+    // if (this._pointListContainer.getElement().contains(prevPointFormComponent.getElement())) {
+    if (this._mode === Mode.EDITING) {
       replace(this._pointFormComponent, prevPointFormComponent);
     }
 
@@ -69,15 +79,24 @@ export default class Point {
     remove(this._pointFormComponent);
   }
 
+  resetView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._replaceFormToPoint();
+    }
+  }
+
   _replacePointToForm() {
     replace(this._pointFormComponent, this._pointComponent);
     document.addEventListener('keydown', this._onEscPress);
     flatpickr(document.querySelectorAll('.event__input--time'), this._configFlatpickr);
+    this._changeMode();
+    this._mode = Mode.EDITING;
   }
 
   _replaceFormToPoint() {
     replace(this._pointComponent, this._pointFormComponent);
     document.removeEventListener('keydown', this._onEscPress);
+    this._mode = Mode.DEFAULT;
   }
 
   _onEscPress(evt) {
@@ -91,8 +110,18 @@ export default class Point {
     this._replacePointToForm();
   }
 
-  _handleEditClickFavorite() {
-    console.log('ВСЕ ПОЛУЧИЛОСЬ');
+  _handleEditClickFavorite(pointData) {
+    this._task = pointData;
+
+    this._changeData(
+      Object.assign(
+        {},
+        this._task,
+        {
+          isFavorite: !this._task.isFavorite,
+        },
+      ),
+    );
   }
 
   _handleFormSubmit() {
