@@ -1,5 +1,6 @@
 import {getRandomInteger} from '../utils/common.js';
 import {takeDate} from '../utils/task.js';
+import {nanoid} from 'nanoid';
 
 const descriptions = ['Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 'Cras aliquet varius magna, non porta ligula feugiat eget.', 'Fusce tristique felis at fermentum pharetra.', 'Aliquam id orci ut lectus varius viverra.', 'Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.', 'Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.', 'Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.', 'Sed sed nisi sed augue convallis suscipit in sed felis.', 'Aliquam erat volutpat.', 'Nunc fermentum tortor ac porta dapibus.', 'In rutrum ac purus sit amet tempus.'];
 
@@ -20,6 +21,16 @@ const generatePhoto = (result = getRandomInteger(0, 1)) => {
     photoAdress = [`http://picsum.photos/248/152?r=${Math.random()}`];
   }
   return photoAdress;
+};
+
+const getStatusFavorite = () => {
+  const number = getRandomInteger();
+  let favorite = false;
+  if (number === 1) {
+    favorite = true;
+    return favorite;
+  }
+  return favorite;
 };
 
 const generateOffer = () => {
@@ -46,6 +57,7 @@ export const generateTask = () => {
   const {dateStart, eventDate, eventTimeStart, travelTime, eventTimeEnd} = takeDate();
 
   return {
+    id: nanoid(),
     dateStart,
     eventDate,
     eventTimeStart,
@@ -58,7 +70,7 @@ export const generateTask = () => {
     eventOffer: generateOffer(),
     description: generateDescription(getRandomInteger(0, 5)),
     eventPhoto: generatePhoto(),
-    isFavorite: getRandomInteger(),
+    isFavorite: getStatusFavorite(),
   };
 };
 
