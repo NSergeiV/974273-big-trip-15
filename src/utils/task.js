@@ -44,10 +44,21 @@ export const takeDate = () => {
     eventTimeStart,
     travelTime,
     eventTimeEnd,
+    travelTimeMinute,
   };
 };
 
 export const compare = (a, b) => {
   const rezalt = (dayjs(a).isAfter(dayjs(b))) ? 1 : -1;
+  return rezalt;
+};
+
+export const sortPointTime = (pointA, pointB) => {
+  const rezalt = (pointB.travelTimeMinute > pointA.travelTimeMinute) ? 1 : -1;
+  return rezalt;
+};
+
+export const sortPointPrice = (pointA, pointB) => {
+  const rezalt = (pointB.eventPrice > pointA.eventPrice) ? 1 : -1;
   return rezalt;
 };

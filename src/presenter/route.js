@@ -4,14 +4,17 @@ import ListPointsView from '../view/list.js';
 import {renderElement, RenderPosition} from '../utils/render.js';
 import ListEmptyView from '../view/list-empty.js';
 import {compare} from '../utils/task.js';
-// import RoutePointView from '../view/route-point.js';
 import {updateItem} from '../utils/common.js';
+
+import {sortPointTime, sortPointPrice} from '../utils/task.js';
+import {SortType} from '../const.js';
 
 export default class Route {
   constructor(routeContainer) {
     this._routeContainer = routeContainer;
     this._siteMainSection = this._routeContainer.querySelector('.trip-events');
     this._pointPresenter = new Map();
+    this._currentSortType = SortType.DEFAULT;
 
     this._mainTripSort = new MainTripSortView();
     this._listPointsView = new ListPointsView();
@@ -19,10 +22,12 @@ export default class Route {
 
     this._handlePointChange = this._handlePointChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
   init(boardTasks) {
     this._boardTasks = boardTasks.slice();
+    this._sourcedBoardTasks = boardTasks.slice();
 
     this._renderBoard();
   }
@@ -36,8 +41,35 @@ export default class Route {
     this._pointPresenter.get(updatedPoint.id).init(updatedPoint);
   }
 
+  _sortTasks(sortType) {
+    switch (sortType) {
+      case SortType.SORT_TIME:
+        this._boardTasks.sort(sortPointTime);
+        break;
+      case SortType.SORT_PRICE:
+        this._boardTasks.sort(sortPointPrice);
+        break;
+      default:
+        this._boardTasks = this._sourcedBoardTasks.slice();
+    }
+
+    this._currentSortType = sortType;
+  }
+
+  _handleSortTypeChange(sortType) {
+    if (this._currentSortType === sortType) {
+      return;
+    }
+
+    this._sortTasks(sortType);
+    this._clearPointList();
+    this._renderRoute();
+  }
+
   _renderSort() {
-    this._tasksSort = this._boardTasks.sort((a, b) => compare(a.dateStart, b.dateStart));
+    this._boardTasks = this._sourcedBoardTasks.sort((a, b) => compare(a.dateStart, b.dateStart)).slice();
+
+    this._mainTripSort.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
   _renderPoint(data) {
@@ -52,7 +84,7 @@ export default class Route {
   }
 
   _renderRoute() {
-    this._tasksSort.forEach((task) => this._renderPoint(task));
+    this._boardTasks.forEach((task) => this._renderPoint(task));
   }
 
   _renderNoRoute() {

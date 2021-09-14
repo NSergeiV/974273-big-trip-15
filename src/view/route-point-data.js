@@ -30,6 +30,7 @@ const checkFavorite = (result) => {
 
 const createRoutePointDataTemplate = (data) => {
   const {eventDate, eventIcon, eventType, eventCity, eventTimeStart, eventTimeEnd, travelTime, eventPrice, eventOffer, isFavorite} = data;
+
   return `<div class="event">
       <time class="event__date" datetime="2019-03-18">${eventDate}</time>
       <div class="event__type">
