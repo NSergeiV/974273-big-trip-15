@@ -34,6 +34,7 @@ export default class Point {
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleFormClose = this._handleFormClose.bind(this);
     this._handleEditClickFavorite = this._handleEditClickFavorite.bind(this);
+    // this._handleEditTypePoint = this._handleEditTypePoint.bind(this);
   }
 
   init(data) {
@@ -47,6 +48,7 @@ export default class Point {
     this._pointComponent.setEditClickFavorite(this._handleEditClickFavorite);
 
     this._pointFormComponent.setFormSubmitHandler(this._handleFormSubmit);
+    this._pointFormComponent.setFormClickSelectPointType(this._handleEditTypePoint);
 
     this._pointFormComponent.setFormCloseHandler(this._handleFormClose);
 

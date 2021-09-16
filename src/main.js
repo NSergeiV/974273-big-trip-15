@@ -9,6 +9,8 @@ const TASK_COUNT = 20;
 
 const tasks = new Array(TASK_COUNT).fill().map(generateTask);
 
+console.log(tasks);
+
 const siteHeader = document.querySelector('header');
 const siteBlockMain = document.querySelector('main');
 const siteHeaderElementTripMain = siteHeader.querySelector('.trip-main');
