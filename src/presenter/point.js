@@ -3,9 +3,6 @@ import flatpickr from 'flatpickr';
 import RoutePointDataView from '../view/route-point-data.js';
 import FormEditingPointView from '../view/form-editing-point.js';
 import {renderElement, RenderPosition, replace, remove} from '../utils/render.js';
-import EventSectionOffersView from '../view/event-section-offers.js';
-import EventOfferSelectorView from '../view/event-offer-selector.js';
-import EventSectionDestinationView from '../view/event-section-destination.js';
 import RoutePointView from '../view/route-point.js';
 
 const Mode = {
@@ -45,7 +42,6 @@ export default class Point {
 
     this._pointComponent = new RoutePointDataView(data);
     this._pointFormComponent = new FormEditingPointView(data);
-    this._createEventOffer(this._pointFormComponent);
 
     this._pointComponent.setEditClickHandler(this._handleEditClick);
     this._pointComponent.setEditClickFavorite(this._handleEditClickFavorite);
@@ -60,12 +56,10 @@ export default class Point {
       return;
     }
 
-    // if (this._pointListContainer.getElement().contains(prevPointComponent.getElement())) {
     if (this._mode === Mode.DEFAULT) {
       replace(this._pointComponent, prevPointComponent);
     }
 
-    // if (this._pointListContainer.getElement().contains(prevPointFormComponent.getElement())) {
     if (this._mode === Mode.EDITING) {
       replace(this._pointFormComponent, prevPointFormComponent);
     }
@@ -130,31 +124,5 @@ export default class Point {
 
   _handleFormClose() {
     this._replaceFormToPoint();
-  }
-
-  _createEventOffer(form) {
-    const eventDetails = form.getElement().querySelector('.event__details');
-    if (form._data.eventOffer.length !== 0) {
-      renderElement(eventDetails, new EventSectionOffersView(), RenderPosition.AFTERBEGIN);
-      const eventAvailableOffers = eventDetails.querySelector('.event__available-offers');
-      const offers = form._data.eventOffer;
-      offers.forEach((offer) => {
-        renderElement(eventAvailableOffers, new EventOfferSelectorView(offer), RenderPosition.AFTERBEGIN);
-      });
-    }
-    if (form._data.description.length !== 0 || form._data.eventPhoto !== null) {
-      renderElement(eventDetails, new EventSectionDestinationView(form._data.description), RenderPosition.BEFOREEND);
-      if (form._data.eventPhoto !== null) {
-        const eventPhotosTape = eventDetails.querySelector('.event__photos-tape');
-        const photos = form._data.eventPhoto;
-        photos.forEach((photo) => {
-          const newPhoto = document.createElement('img');
-          newPhoto.classList.add('event__photo');
-          newPhoto.setAttribute('src', photo);
-          newPhoto.setAttribute('alt', 'Event photo');
-          eventPhotosTape.append(newPhoto);
-        });
-      }
-    }
   }
 }
