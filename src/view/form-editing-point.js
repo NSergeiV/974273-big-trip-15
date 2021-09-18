@@ -1,7 +1,65 @@
-import AbstractView from './abstract.js';
+import SmartView from './smart.js';
+
+const BLANK_POINT = {
+  id: null,
+  dateStart: null,
+  eventDate: null,
+  eventTimeStart: null,
+  travelTime: null,
+  eventTimeEnd: null,
+  travelTimeMinute: null,
+  eventType: null,
+  eventCity: null,
+  eventIcon: null,
+  eventPrice: null,
+  eventOffer: [],
+  description: '',
+  eventPhoto: null,
+  isFavorite: false,
+};
+
+const createEventOffer = (offers, isOfferLength) => (
+  `${isOfferLength ? `<section class="event__section  event__section--offers">
+     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+     <div class="event__available-offers">
+     ${offers.map((offer) => `<div class="event__offer-selector">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${Object.keys(offer)}-1" type="checkbox" name="event-offer-${Object.keys(offer)}" checked>
+        <label class="event__offer-label" for="event-offer-${Object.keys(offer)}-1">
+          <span class="event__offer-title">${Object.keys(offer)}</span>
+          &plus;&euro;&nbsp;
+          <span class="event__offer-price">${Object.values(offer)}</span>
+        </label>
+      </div>`).join('')}
+    </div>
+  </section>` : ''}`
+);
+
+const createEventPhoto = (eventPhotos) => (
+  `<div class="event__photos-container">
+      <div class="event__photos-tape">
+        ${eventPhotos.map((photo) => `<img src="${photo}" class="event__photo" alt="Event photo">`).join('')}
+      </div>
+    </div>`
+);
+
+const createEventDescription = (description) => (
+  `<p class="event__destination-description">${description}</p>`
+);
+
+const createEventDestination = (description, eventPhotos, isDescriptionLength, isEventPhoto) => (
+  `${isDescriptionLength || isEventPhoto ? `<section class="event__section  event__section--destination">
+    <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+      ${isDescriptionLength ? createEventDescription(description) : ''}
+      ${isEventPhoto ? createEventPhoto(eventPhotos) : ''}
+    </section>` : ' '}`
+);
 
 const createFormEditingPointTemplate = (data) => {
-  const {eventType, eventIcon} = data;
+  const {eventType, eventIcon, eventPrice, eventCity, eventOffer, description, eventPhoto, isOfferLength, isDescriptionLength, isEventPhoto} = data;
+
+  const repeatingOffer = createEventOffer(eventOffer, isOfferLength);
+  const destination = createEventDestination(description, eventPhoto, isDescriptionLength, isEventPhoto);
+
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
       <header class="event__header">
@@ -73,7 +131,7 @@ const createFormEditingPointTemplate = (data) => {
           <label class="event__label  event__type-output" for="event-destination-1">
             ${eventType}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Geneva" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${eventCity} list="destination-list-1">
           <datalist id="destination-list-1">
             <option value="Amsterdam"></option>
             <option value="Geneva"></option>
@@ -94,7 +152,7 @@ const createFormEditingPointTemplate = (data) => {
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
+          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value=${eventPrice}>
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -104,33 +162,159 @@ const createFormEditingPointTemplate = (data) => {
         </button>
       </header>
       <section class="event__details">
-
+        ${repeatingOffer}
+        ${destination}
       </section>
     </form>
   </li>`;
 };
 
-export default class FormEditingPoint extends AbstractView {
-  constructor(data) {
+export default class FormEditingPoint extends SmartView {
+  constructor(point = BLANK_POINT) {
     super();
-    this._data = data;
+    this._data = FormEditingPoint.parsePointToData(point);
+
+    //this._testTypePoint = {eventOffer: [{'Add luggage': 30}, {'Switch to comfort class': 100}, {'Add meal': 15}, {'Choose seats': 5}, {'Travel by train': 40}]};
+
+    this._testTypePoint = [
+      {
+        eventType: 'Taxi',
+        eventOffer: [{'Add luggage': 30}, {'Switch to comfort class': 100}, {'Add meal': 15}, {'Choose seats': 5}, {'Travel by train': 40}],
+        eventIcon: 'img/icons/taxi.png',
+      },
+      {
+        eventType: 'Bus',
+        eventOffer: [],
+        eventIcon: 'img/icons/bus.png',
+      },
+      {
+        eventType: 'Train',
+        eventOffer: [{'Add luggage': 30}, {'Switch to comfort class': 100}],
+        eventIcon: 'img/icons/train.png',
+      },
+      {
+        eventType: 'Ship',
+        eventOffer: [{'Add luggage': 30}, {'Switch to comfort class': 100}, {'Add meal': 15}, {'Choose seats': 5}],
+        eventIcon: 'img/icons/ship.png',
+      },
+      {
+        eventType: 'Drive',
+        eventOffer: [{'Add luggage': 30}],
+        eventIcon: 'img/icons/drive.png',
+      },
+      {
+        eventType: 'Flight',
+        eventOffer: [{'Add luggage': 30}, {'Switch to comfort class': 100}, {'Add meal': 15}, {'Choose seats': 5}],
+        eventIcon: 'img/icons/flight.png',
+      },
+      {
+        eventType: 'Check-in',
+        eventOffer: [{'Add luggage': 30}, {'Switch to comfort class': 100}, {'Add meal': 15}, {'Choose seats': 5}, {'Travel by train': 40}],
+        eventIcon: 'img/icons/check-in.png',
+      },
+      {
+        eventType: 'Sightseeing',
+        eventOffer: [],
+        eventIcon: 'img/icons/sightseeing.png',
+      },
+      {
+        eventType: 'Restaurant',
+        eventOffer: [{'Add luggage': 30}, {'Switch to comfort class': 100}, {'Add meal': 15}],
+        eventIcon: 'img/icons/restaurant.png',
+      },
+      {
+        eventType: 'Transport',
+        eventOffer: [{'Add luggage': 30}, {'Switch to comfort class': 100}, {'Add meal': 15}],
+        eventIcon: 'img/icons/transport.png',
+      },
+    ];
+
+    this._testDestination = [
+      {
+        city: 'Amsterdam',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+        eventPhoto: ['http://picsum.photos/248/152?r=0.9915930555535986'],
+      },
+      { city: 'Geneva',
+        description: 'Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.',
+        eventPhoto: null,
+      },
+      { city: 'Chamonix',
+        description: '',
+        eventPhoto: ['http://picsum.photos/248/152?r=0.22033087115957795'],
+      },
+    ];
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._formCloseHandler = this._formCloseHandler.bind(this);
+    this._formSelectTypePoint = this._formSelectTypePoint.bind(this);
+    this._formSelectDestination = this._formSelectDestination.bind(this);
+
+    this._setInnerHandlers();
+  }
+
+  reset(pointData) {
+    this.updateData(
+      FormEditingPoint.parsePointToData(pointData),
+    );
   }
 
   getTemplate() {
     return createFormEditingPointTemplate(this._data);
   }
 
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setFormCloseHandler(this._callback.formClose);
+  }
+
+  _setInnerHandlers() {
+    this.getElement().querySelector('fieldset').addEventListener('click', this._formSelectTypePoint);
+    this.getElement().querySelector('.event__input--destination').addEventListener('change', this._formSelectDestination);
+  }
+
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit();
+    this._callback.formSubmit(FormEditingPoint.parseDataToPoint(this._data));
   }
 
   _formCloseHandler(evt) {
     evt.preventDefault();
     this._callback.formClose();
+  }
+
+  _formSelectTypePoint(evt) {
+    evt.preventDefault();
+
+    const nameIconType = evt.target.closest('div').querySelector('input').value;
+    const nameTypeChoice = evt.target.textContent;
+    this.getElement().querySelector('.event__type-output').textContent = nameTypeChoice;
+    this.getElement().querySelector('.event__type-icon').src = `img/icons/${nameIconType}.png`;
+    this.getElement().querySelector('.event__type-list').style.display = 'none';
+
+    const transportType = this._testTypePoint.filter((type) => type.eventType === nameTypeChoice);
+
+    this.updateData({
+      isOfferLength: transportType[0].eventOffer.length !== 0,
+      eventIcon: transportType[0].eventIcon,
+      eventType: transportType[0].eventType,
+      eventOffer: transportType[0].eventOffer,
+    });
+  }
+
+  _formSelectDestination(evt) {
+    const nameCite = evt.target.value;
+    const descriptionCity = this._testDestination.filter((element) => element.city === nameCite);
+
+    evt.preventDefault();
+    this.updateData({
+      isEventPhoto: descriptionCity[0].eventPhoto !== null,
+      isDescriptionLength: descriptionCity[0].description.length !== 0,
+      eventCity: evt.target.value,
+      description: descriptionCity[0].description,
+      eventPhoto: descriptionCity[0].eventPhoto,
+    });
   }
 
   setFormSubmitHandler(callback) {
@@ -141,5 +325,39 @@ export default class FormEditingPoint extends AbstractView {
   setFormCloseHandler(callback) {
     this._callback.formClose = callback;
     this.getElement().querySelector('form').querySelector('.event__rollup-btn').addEventListener('click', this._formCloseHandler);
+  }
+
+  static parsePointToData(point) {
+    return Object.assign(
+      {},
+      point,
+      {
+        isEventPhoto: point.eventPhoto !== null,
+        isOfferLength: point.eventOffer.length !== 0,
+        isDescriptionLength: point.description.length !== 0,
+      },
+    );
+  }
+
+  static parseDataToPoint(data) {
+    data = Object.assign({}, data);
+
+    if (!data.isEventPhoto) {
+      data.eventPhoto = null;
+    }
+
+    if (!data.isOfferLength) {
+      data.eventOffer = [];
+    }
+
+    if (!data.isDescriptionLength) {
+      data.description = '';
+    }
+
+    delete data.isEventPhoto;
+    delete data.isOfferLength;
+    delete data.isDescriptionLength;
+
+    return data;
   }
 }
