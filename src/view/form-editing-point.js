@@ -1,4 +1,4 @@
-import AbstractView from './abstract.js';
+import SmartView from './smart.js';
 
 const BLANK_POINT = {
   id: null,
@@ -34,23 +34,23 @@ const createEventOffer = (offers, isOfferLength) => (
   </section>` : ''}`
 );
 
-const createEventPhoto = (eventPhotos, isEventPhoto) => (
-  `${isEventPhoto ? `<div class="event__photos-container">
+const createEventPhoto = (eventPhotos) => (
+  `<div class="event__photos-container">
       <div class="event__photos-tape">
         ${eventPhotos.map((photo) => `<img src="${photo}" class="event__photo" alt="Event photo">`).join('')}
       </div>
-    </div>` : ''}`
+    </div>`
 );
 
-const createEventDescription = (description, isDescriptionLength) => (
-  `${isDescriptionLength ? `<p class="event__destination-description">${description}</p>` : ''}`
+const createEventDescription = (description) => (
+  `<p class="event__destination-description">${description}</p>`
 );
 
 const createEventDestination = (description, eventPhotos, isDescriptionLength, isEventPhoto) => (
   `${isDescriptionLength || isEventPhoto ? `<section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      ${createEventDescription(description, isDescriptionLength)}
-      ${createEventPhoto(eventPhotos, isEventPhoto)}
+      ${isDescriptionLength ? createEventDescription(description) : ''}
+      ${isEventPhoto ? createEventPhoto(eventPhotos) : ''}
     </section>` : ' '}`
 );
 
@@ -169,43 +169,56 @@ const createFormEditingPointTemplate = (data) => {
   </li>`;
 };
 
-export default class FormEditingPoint extends AbstractView {
+export default class FormEditingPoint extends SmartView {
   constructor(point = BLANK_POINT) {
     super();
     this._data = FormEditingPoint.parsePointToData(point);
 
+    this._testTypePoint = {eventOffer: [{'Add luggage': 30}, {'Switch to comfort class': 100}, {'Add meal': 15}, {'Choose seats': 5}, {'Travel by train': 40}]};
+    this._testDestination = [
+      {
+        city: 'Amsterdam',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+        eventPhoto: ['http://picsum.photos/248/152?r=0.9915930555535986'],
+      },
+      { city: 'Geneva',
+        description: 'Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.',
+        eventPhoto: null,
+      },
+      { city: 'Chamonix',
+        description: '',
+        eventPhoto: ['http://picsum.photos/248/152?r=0.22033087115957795'],
+      },
+    ];
+
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._formCloseHandler = this._formCloseHandler.bind(this);
     this._formSelectTypePoint = this._formSelectTypePoint.bind(this);
+    this._formSelectDestination = this._formSelectDestination.bind(this);
 
+    this._setInnerHandlers();
+  }
+
+  reset(pointData) {
+    this.updateData(
+      FormEditingPoint.parsePointToData(pointData),
+    );
   }
 
   getTemplate() {
     return createFormEditingPointTemplate(this._data);
   }
 
-  updateData(update) {
-    if (!update) {
-      return;
-    }
-
-    this._data = Object.assign(
-      {},
-      this._data,
-      update,
-    );
-
-    this.updateElement();
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setFormCloseHandler(this._callback.formClose);
   }
 
-  updateElement() {
-    const prevElement = this.getElement();
-    const parent = prevElement.parentElement;
-    this.removeElement();
-
-    const newElement = this.getElement();
-
-    parent.replaceChild(newElement, prevElement);
+  _setInnerHandlers() {
+    console.log('ПРОХОДИТ');
+    this.getElement().querySelector('fieldset').addEventListener('click', this._formSelectTypePoint);
+    this.getElement().querySelector('.event__input--destination').addEventListener('change', this._formSelectDestination);
   }
 
   _formSubmitHandler(evt) {
@@ -220,13 +233,38 @@ export default class FormEditingPoint extends AbstractView {
 
   _formSelectTypePoint(evt) {
     evt.preventDefault();
-    // console.log();
-    // this._callback.typePoint(evt.target.closest('div'));
+
     const nameIconType = evt.target.closest('div').querySelector('input').value;
     const nameType = evt.target.textContent;
     this.getElement().querySelector('.event__type-output').textContent = nameType;
     this.getElement().querySelector('.event__type-icon').src = `img/icons/${nameIconType}.png`;
     this.getElement().querySelector('.event__type-list').style.display = 'none';
+
+    this.updateData({
+      // isOfferLength: !this._data.isOfferLength,
+      isOfferLength: this._testTypePoint.length !== 0,
+      eventIcon: `img/icons/${nameIconType}.png`,
+      eventType: nameType,
+      eventOffer: this._testTypePoint.eventOffer,
+    });
+  }
+
+  _formSelectDestination(evt) {
+    const nameCite = evt.target.value;
+    const descriptionCity = this._testDestination.filter((element) => {
+      console.log(Object.keys(element));
+      console.log(nameCite);
+      return element.city === nameCite;
+    });
+    console.log(descriptionCity);
+    evt.preventDefault();
+    this.updateData({
+      isEventPhoto: descriptionCity[0].eventPhoto !== null,
+      isDescriptionLength: descriptionCity[0].description.length !== 0,
+      eventCity: evt.target.value,
+      description: descriptionCity[0].description,
+      eventPhoto: descriptionCity[0].eventPhoto,
+    });
   }
 
   setFormSubmitHandler(callback) {
@@ -237,11 +275,6 @@ export default class FormEditingPoint extends AbstractView {
   setFormCloseHandler(callback) {
     this._callback.formClose = callback;
     this.getElement().querySelector('form').querySelector('.event__rollup-btn').addEventListener('click', this._formCloseHandler);
-  }
-
-  setFormClickSelectPointType(callback) {
-    this._callback.typePoint = callback;
-    this.getElement().querySelector('fieldset').addEventListener('click', this._formSelectTypePoint);
   }
 
   static parsePointToData(point) {

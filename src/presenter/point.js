@@ -38,6 +38,7 @@ export default class Point {
   }
 
   init(data) {
+    this._pointData = data;
     const prevPointComponent = this._pointComponent;
     const prevPointFormComponent = this._pointFormComponent;
 
@@ -48,7 +49,7 @@ export default class Point {
     this._pointComponent.setEditClickFavorite(this._handleEditClickFavorite);
 
     this._pointFormComponent.setFormSubmitHandler(this._handleFormSubmit);
-    this._pointFormComponent.setFormClickSelectPointType(this._handleEditTypePoint);
+    // this._pointFormComponent.setFormClickSelectPointType(this._handleEditTypePoint);
 
     this._pointFormComponent.setFormCloseHandler(this._handleFormClose);
 
@@ -98,6 +99,7 @@ export default class Point {
   _onEscPress(evt) {
     if (evt.key === 'Escape') {
       evt.preventDefault();
+      this._pointFormComponent.reset(this._pointData);
       this._replaceFormToPoint();
     }
   }
@@ -125,6 +127,7 @@ export default class Point {
   }
 
   _handleFormClose() {
+    this._pointFormComponent.reset(this._pointData);
     this._replaceFormToPoint();
   }
 }
