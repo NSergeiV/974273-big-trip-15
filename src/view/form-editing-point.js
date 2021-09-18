@@ -174,7 +174,61 @@ export default class FormEditingPoint extends SmartView {
     super();
     this._data = FormEditingPoint.parsePointToData(point);
 
-    this._testTypePoint = {eventOffer: [{'Add luggage': 30}, {'Switch to comfort class': 100}, {'Add meal': 15}, {'Choose seats': 5}, {'Travel by train': 40}]};
+    //this._testTypePoint = {eventOffer: [{'Add luggage': 30}, {'Switch to comfort class': 100}, {'Add meal': 15}, {'Choose seats': 5}, {'Travel by train': 40}]};
+
+    this._testTypePoint = [
+      {
+        eventType: 'Taxi',
+        eventOffer: [{'Add luggage': 30}, {'Switch to comfort class': 100}, {'Add meal': 15}, {'Choose seats': 5}, {'Travel by train': 40}],
+        eventIcon: 'img/icons/taxi.png',
+      },
+      {
+        eventType: 'Bus',
+        eventOffer: [],
+        eventIcon: 'img/icons/bus.png',
+      },
+      {
+        eventType: 'Train',
+        eventOffer: [{'Add luggage': 30}, {'Switch to comfort class': 100}],
+        eventIcon: 'img/icons/train.png',
+      },
+      {
+        eventType: 'Ship',
+        eventOffer: [{'Add luggage': 30}, {'Switch to comfort class': 100}, {'Add meal': 15}, {'Choose seats': 5}],
+        eventIcon: 'img/icons/ship.png',
+      },
+      {
+        eventType: 'Drive',
+        eventOffer: [{'Add luggage': 30}],
+        eventIcon: 'img/icons/drive.png',
+      },
+      {
+        eventType: 'Flight',
+        eventOffer: [{'Add luggage': 30}, {'Switch to comfort class': 100}, {'Add meal': 15}, {'Choose seats': 5}],
+        eventIcon: 'img/icons/flight.png',
+      },
+      {
+        eventType: 'Check-in',
+        eventOffer: [{'Add luggage': 30}, {'Switch to comfort class': 100}, {'Add meal': 15}, {'Choose seats': 5}, {'Travel by train': 40}],
+        eventIcon: 'img/icons/check-in.png',
+      },
+      {
+        eventType: 'Sightseeing',
+        eventOffer: [],
+        eventIcon: 'img/icons/sightseeing.png',
+      },
+      {
+        eventType: 'Restaurant',
+        eventOffer: [{'Add luggage': 30}, {'Switch to comfort class': 100}, {'Add meal': 15}],
+        eventIcon: 'img/icons/restaurant.png',
+      },
+      {
+        eventType: 'Transport',
+        eventOffer: [{'Add luggage': 30}, {'Switch to comfort class': 100}, {'Add meal': 15}],
+        eventIcon: 'img/icons/transport.png',
+      },
+    ];
+
     this._testDestination = [
       {
         city: 'Amsterdam',
@@ -216,7 +270,6 @@ export default class FormEditingPoint extends SmartView {
   }
 
   _setInnerHandlers() {
-    console.log('ПРОХОДИТ');
     this.getElement().querySelector('fieldset').addEventListener('click', this._formSelectTypePoint);
     this.getElement().querySelector('.event__input--destination').addEventListener('change', this._formSelectDestination);
   }
@@ -235,28 +288,25 @@ export default class FormEditingPoint extends SmartView {
     evt.preventDefault();
 
     const nameIconType = evt.target.closest('div').querySelector('input').value;
-    const nameType = evt.target.textContent;
-    this.getElement().querySelector('.event__type-output').textContent = nameType;
+    const nameTypeChoice = evt.target.textContent;
+    this.getElement().querySelector('.event__type-output').textContent = nameTypeChoice;
     this.getElement().querySelector('.event__type-icon').src = `img/icons/${nameIconType}.png`;
     this.getElement().querySelector('.event__type-list').style.display = 'none';
 
+    const transportType = this._testTypePoint.filter((type) => type.eventType === nameTypeChoice);
+
     this.updateData({
-      // isOfferLength: !this._data.isOfferLength,
-      isOfferLength: this._testTypePoint.length !== 0,
-      eventIcon: `img/icons/${nameIconType}.png`,
-      eventType: nameType,
-      eventOffer: this._testTypePoint.eventOffer,
+      isOfferLength: transportType[0].eventOffer.length !== 0,
+      eventIcon: transportType[0].eventIcon,
+      eventType: transportType[0].eventType,
+      eventOffer: transportType[0].eventOffer,
     });
   }
 
   _formSelectDestination(evt) {
     const nameCite = evt.target.value;
-    const descriptionCity = this._testDestination.filter((element) => {
-      console.log(Object.keys(element));
-      console.log(nameCite);
-      return element.city === nameCite;
-    });
-    console.log(descriptionCity);
+    const descriptionCity = this._testDestination.filter((element) => element.city === nameCite);
+
     evt.preventDefault();
     this.updateData({
       isEventPhoto: descriptionCity[0].eventPhoto !== null,
