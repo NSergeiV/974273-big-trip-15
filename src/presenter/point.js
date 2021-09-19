@@ -1,5 +1,3 @@
-import flatpickr from 'flatpickr';
-
 import RoutePointDataView from '../view/route-point-data.js';
 import FormEditingPointView from '../view/form-editing-point.js';
 import {renderElement, RenderPosition, replace, remove} from '../utils/render.js';
@@ -34,7 +32,6 @@ export default class Point {
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleFormClose = this._handleFormClose.bind(this);
     this._handleEditClickFavorite = this._handleEditClickFavorite.bind(this);
-    // this._handleEditTypePoint = this._handleEditTypePoint.bind(this);
   }
 
   init(data) {
@@ -49,7 +46,6 @@ export default class Point {
     this._pointComponent.setEditClickFavorite(this._handleEditClickFavorite);
 
     this._pointFormComponent.setFormSubmitHandler(this._handleFormSubmit);
-    // this._pointFormComponent.setFormClickSelectPointType(this._handleEditTypePoint);
 
     this._pointFormComponent.setFormCloseHandler(this._handleFormClose);
 
@@ -85,7 +81,6 @@ export default class Point {
   _replacePointToForm() {
     replace(this._pointFormComponent, this._pointComponent);
     document.addEventListener('keydown', this._onEscPress);
-    flatpickr(document.querySelectorAll('.event__input--time'), this._configFlatpickr);
     this._changeMode();
     this._mode = Mode.EDITING;
   }

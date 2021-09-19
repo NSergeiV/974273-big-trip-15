@@ -28,9 +28,10 @@ const calculate = (d, h, m) => {
 
 export const takeDate = () => {
   const dateStart = generateDate();
-  const eventDate = dayjs(dateStart).format('MMM DD');
+  const eventDate = dayjs(dateStart).format('DD/MM/YY HH:mm');
   const eventTimeStart = dayjs(dateStart).format('HH:mm');
   const dateEnd = generateDate(dateStart);
+  const eventDateEnd = dayjs(dateEnd).format('DD/MM/YY HH:mm');
   const eventTimeEnd = dayjs(dateEnd).format('HH:mm');
   const travelTimeMinute = dateEnd.diff(dateStart, 'm');
   const travelTimeHour = dateEnd.diff(dateStart, 'h');
@@ -43,6 +44,7 @@ export const takeDate = () => {
     eventDate,
     eventTimeStart,
     travelTime,
+    eventDateEnd,
     eventTimeEnd,
     travelTimeMinute,
   };
