@@ -54,7 +54,7 @@ const generateCity = () => {
 };
 
 export const generateTask = () => {
-  const {dateStart, eventDate, eventTimeStart, travelTime, eventTimeEnd, travelTimeMinute} = takeDate();
+  const {dateStart, eventDate, eventTimeStart, travelTime, eventDateEnd, eventTimeEnd, travelTimeMinute} = takeDate();
 
   return {
     id: nanoid(),
@@ -62,6 +62,7 @@ export const generateTask = () => {
     eventDate,
     eventTimeStart,
     travelTime,
+    eventDateEnd,
     eventTimeEnd,
     travelTimeMinute,
     eventType: generateEventType(),

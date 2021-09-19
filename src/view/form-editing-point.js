@@ -1,4 +1,7 @@
 import SmartView from './smart.js';
+import flatpickr from 'flatpickr';
+
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
 const BLANK_POINT = {
   id: null,
@@ -55,7 +58,7 @@ const createEventDestination = (description, eventPhotos, isDescriptionLength, i
 );
 
 const createFormEditingPointTemplate = (data) => {
-  const {eventType, eventIcon, eventPrice, eventCity, eventOffer, description, eventPhoto, isOfferLength, isDescriptionLength, isEventPhoto} = data;
+  const {eventDate, eventDateEnd, eventType, eventIcon, eventPrice, eventCity, eventOffer, description, eventPhoto, isOfferLength, isDescriptionLength, isEventPhoto} = data;
 
   const repeatingOffer = createEventOffer(eventOffer, isOfferLength);
   const destination = createEventDestination(description, eventPhoto, isDescriptionLength, isEventPhoto);
@@ -141,10 +144,10 @@ const createFormEditingPointTemplate = (data) => {
 
         <div class="event__field-group  event__field-group--time">
           <label class="visually-hidden" for="event-start-time-1">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="19/03/19 00:00">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value=${eventDate}>
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">To</label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="19/03/19 00:00">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${eventDateEnd}">
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -173,8 +176,7 @@ export default class FormEditingPoint extends SmartView {
   constructor(point = BLANK_POINT) {
     super();
     this._data = FormEditingPoint.parsePointToData(point);
-
-    //this._testTypePoint = {eventOffer: [{'Add luggage': 30}, {'Switch to comfort class': 100}, {'Add meal': 15}, {'Choose seats': 5}, {'Travel by train': 40}]};
+    this._datepicker = null;
 
     this._testTypePoint = [
       {
@@ -249,8 +251,11 @@ export default class FormEditingPoint extends SmartView {
     this._formCloseHandler = this._formCloseHandler.bind(this);
     this._formSelectTypePoint = this._formSelectTypePoint.bind(this);
     this._formSelectDestination = this._formSelectDestination.bind(this);
+    this._startDateHandler = this._startDateHandler.bind(this);
+    this._finishDateHandler = this._finishDateHandler.bind(this);
 
     this._setInnerHandlers();
+    this._setDatepicker();
   }
 
   reset(pointData) {
@@ -265,8 +270,52 @@ export default class FormEditingPoint extends SmartView {
 
   restoreHandlers() {
     this._setInnerHandlers();
+    this._setDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setFormCloseHandler(this._callback.formClose);
+  }
+
+  _setDatepicker() {
+    if (this._datepicker) {
+      this._datepicker.destroy();
+      this._datepicker = null;
+    }
+
+    flatpickr(
+      this.getElement().querySelector('#event-start-time-1'),
+      {
+        enableTime: true,
+        altInput: true,
+        altFormat: 'd/m/y H:i',
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._data.eventDate,
+        onChange: this._startDateHandler,
+      },
+    );
+
+    flatpickr(
+      this.getElement().querySelector('#event-end-time-1'),
+      {
+        enableTime: true,
+        altInput: true,
+        altFormat: 'd/m/y H:i',
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._data.eventDateEnd,
+        onChange: this._finishDateHandler,
+      },
+    );
+  }
+
+  _startDateHandler([userDate]) {
+    this.updateData({
+      eventDate: userDate,
+    });
+  }
+
+  _finishDateHandler([userDate]) {
+    this.updateData({
+      eventDateEnd: userDate,
+    });
   }
 
   _setInnerHandlers() {
