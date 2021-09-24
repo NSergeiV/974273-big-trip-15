@@ -248,6 +248,7 @@ export default class FormEditingPoint extends SmartView {
     ];
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
     this._formCloseHandler = this._formCloseHandler.bind(this);
     this._formSelectTypePoint = this._formSelectTypePoint.bind(this);
     this._formSelectDestination = this._formSelectDestination.bind(this);
@@ -256,6 +257,15 @@ export default class FormEditingPoint extends SmartView {
 
     this._setInnerHandlers();
     this._setDatepicker();
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this._datepicker) {
+      this._datepicker.destroy();
+      this._datepicker = null;
+    }
   }
 
   reset(pointData) {
@@ -273,6 +283,7 @@ export default class FormEditingPoint extends SmartView {
     this._setDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setFormCloseHandler(this._callback.formClose);
+    this.setFormDeleteHandler(this._callback.deleteClick);
   }
 
   _setDatepicker() {
@@ -321,6 +332,17 @@ export default class FormEditingPoint extends SmartView {
   _setInnerHandlers() {
     this.getElement().querySelector('fieldset').addEventListener('click', this._formSelectTypePoint);
     this.getElement().querySelector('.event__input--destination').addEventListener('change', this._formSelectDestination);
+    const inputPrice = this.getElement().querySelector('.event__input--price');
+
+    inputPrice.addEventListener('keyup', () => {
+      const valuePrice = inputPrice.value;
+      if (valuePrice.match(/[^\d]+/g)) {
+        inputPrice.setCustomValidity('Нужны цифры');
+      } else {
+        inputPrice.setCustomValidity('');
+      }
+      inputPrice.reportValidity();
+    });
   }
 
   _formSubmitHandler(evt) {
@@ -374,6 +396,16 @@ export default class FormEditingPoint extends SmartView {
   setFormCloseHandler(callback) {
     this._callback.formClose = callback;
     this.getElement().querySelector('form').querySelector('.event__rollup-btn').addEventListener('click', this._formCloseHandler);
+  }
+
+  _formDeleteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteClick(FormEditingPoint.parseDataToPoint(this._data));
+  }
+
+  setFormDeleteHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._formDeleteClickHandler);
   }
 
   static parsePointToData(point) {

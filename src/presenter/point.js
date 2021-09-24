@@ -2,6 +2,8 @@ import RoutePointDataView from '../view/route-point-data.js';
 import FormEditingPointView from '../view/form-editing-point.js';
 import {renderElement, RenderPosition, replace, remove} from '../utils/render.js';
 import RoutePointView from '../view/route-point.js';
+import {UserAction, UpdateType} from '../const.js';
+import {isDatesEqual} from '../utils/task.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -20,18 +22,12 @@ export default class Point {
     this._pointFormComponent = null;
     this._mode = Mode.DEFAULT;
 
-    this._configFlatpickr = {
-      enableTime: true,
-      altInput: true,
-      altFormat: 'd/m/y H:i',
-      dateFormat: 'd/m/y H:i',
-    };
-
     this._onEscPress = this._onEscPress.bind(this);
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleFormClose = this._handleFormClose.bind(this);
     this._handleEditClickFavorite = this._handleEditClickFavorite.bind(this);
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
   }
 
   init(data) {
@@ -48,6 +44,7 @@ export default class Point {
     this._pointFormComponent.setFormSubmitHandler(this._handleFormSubmit);
 
     this._pointFormComponent.setFormCloseHandler(this._handleFormClose);
+    this._pointFormComponent.setFormDeleteHandler(this._handleDeleteClick);
 
     if (prevPointComponent === null || prevPointFormComponent === null) {
       renderElement(this._routePointView, this._pointComponent, RenderPosition.BEFOREEND);
@@ -68,6 +65,7 @@ export default class Point {
   }
 
   destroy() {
+    remove(this._routePointView);
     remove(this._pointComponent);
     remove(this._pointFormComponent);
   }
@@ -107,6 +105,8 @@ export default class Point {
     this._task = pointData;
 
     this._changeData(
+      UserAction.UPDATE_TASK,
+      UpdateType.MINOR,
       Object.assign(
         {},
         this._task,
@@ -117,7 +117,27 @@ export default class Point {
     );
   }
 
-  _handleFormSubmit() {
+  _handleFormSubmit(update) {
+    // Проверяем, поменялись ли в задаче данные, которые попадают под фильтрацию,
+    // а значит требуют перерисовки списка - если таких нет, это PATCH-обновление
+    const isMinorUpdate =
+      !isDatesEqual(this._pointData.dueDate, update.dueDate);
+
+    this._changeData(
+      UserAction.UPDATE_TASK,
+      isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
+      update,
+    );
+
+    this._replaceFormToPoint();
+  }
+
+  _handleDeleteClick(task) {
+    this._changeData(
+      UserAction.DELETE_TASK,
+      UpdateType.MINOR,
+      task,
+    );
     this._replaceFormToPoint();
   }
 

@@ -19,4 +19,3 @@ export default class HeaderRoutePrice extends AbstractView {
     return createHeaderRoutePriceTemplate();
   }
 }
-
