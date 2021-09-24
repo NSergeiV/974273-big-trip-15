@@ -1,10 +1,11 @@
 import dayjs from 'dayjs';
+import '../../node_modules/dayjs/plugin/isSameOrAfter';
 import {getRandomInteger} from './common.js';
 
 const generateDate = (date) => {
   const maxDaysGap = 21520;
   const maxDriveGap = 2880;
-  const isDate = (!date) ? dayjs().add(getRandomInteger(24, maxDaysGap), 'm') : dayjs(date).add(getRandomInteger(1, maxDriveGap), 'm');
+  const isDate = (!date) ? dayjs().add(getRandomInteger(-maxDaysGap, maxDaysGap), 'm') : dayjs(date).add(getRandomInteger(1, maxDriveGap), 'm');
 
   return isDate;
 };
@@ -26,9 +27,16 @@ const calculate = (d, h, m) => {
   }
 };
 
+// export const isPontFuture = (dueDate) => dueDate === null ? false : dayjs('2010-01-01').isSameOrAfter(dayjs('2011-01-01'));
+export const isPontFuture = (dueDate) => dueDate === null ? false : dayjs(dueDate).isAfter(dayjs());
+// export const isPontFuture = (dueDate) => dayjs('2010-01-01').isSameOrAfter(dayjs('2011-01-01'));
+
+export const isPointFinished = (dueDate) => dueDate === null ? false : dayjs(dueDate).isBefore(dayjs());
+
 export const takeDate = () => {
   const dateStart = generateDate();
   const eventDate = dayjs(dateStart).format('DD/MM/YY HH:mm');
+  const eventDateStart = dayjs(dateStart).format('MMM DD');
   const eventTimeStart = dayjs(dateStart).format('HH:mm');
   const dateEnd = generateDate(dateStart);
   const eventDateEnd = dayjs(dateEnd).format('DD/MM/YY HH:mm');
@@ -41,7 +49,9 @@ export const takeDate = () => {
 
   return {
     dateStart,
+    dateEnd,
     eventDate,
+    eventDateStart,
     eventTimeStart,
     travelTime,
     eventDateEnd,
@@ -51,7 +61,7 @@ export const takeDate = () => {
 };
 
 export const compare = (a, b) => {
-  const rezalt = (dayjs(a).isAfter(dayjs(b))) ? 1 : -1;
+  const rezalt = (dayjs(a.dateStart).isAfter(dayjs(b.dateStart))) ? 1 : -1;
   return rezalt;
 };
 
@@ -64,3 +74,5 @@ export const sortPointPrice = (pointA, pointB) => {
   const rezalt = (pointB.eventPrice > pointA.eventPrice) ? 1 : -1;
   return rezalt;
 };
+
+export const isDatesEqual = (dateA, dateB) => (dateA === null && dateB === null) ? true : dayjs(dateA).isSame(dateB, 'D');

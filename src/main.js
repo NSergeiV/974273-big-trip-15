@@ -1,7 +1,9 @@
 import HeaderRoutePriceView from './view/header-route-price.js';
 import HeaderMenuView from './view/header-menu.js';
-import HeaderFilterView from './view/header-filter.js';
 import RoutePresenter from './presenter/route.js';
+import FilterPresenter from './presenter/filter.js';
+import PointsModel from './model/points.js';
+import FilterModel from './model/filter.js';
 import {generateTask} from './mock/task.js';
 import {renderElement, RenderPosition} from './utils/render.js';
 
@@ -15,14 +17,24 @@ const siteHeaderElementTripMain = siteHeader.querySelector('.trip-main');
 const siteHeaderElementNavigation = siteHeader.querySelector('.trip-controls__navigation');
 const siteHeaderElementFilter = siteHeader.querySelector('.trip-controls__filters');
 
+const pointsModel = new PointsModel();
+pointsModel.setPoints(tasks);
+
+const filterModel = new FilterModel();
+
 renderElement(siteHeaderElementNavigation, new HeaderMenuView(), RenderPosition.BEFOREEND);
-renderElement(siteHeaderElementFilter, new HeaderFilterView(), RenderPosition.BEFOREEND);
 
 if (tasks.length !== 0) {
   renderElement(siteHeaderElementTripMain, new HeaderRoutePriceView(), RenderPosition.AFTERBEGIN);
 }
 
-const routePresenter = new RoutePresenter(siteBlockMain);
+const routePresenter = new RoutePresenter(siteBlockMain, pointsModel, filterModel);
+const filterPresenter = new FilterPresenter(siteHeaderElementFilter, filterModel, pointsModel);
 
-routePresenter.init(tasks);
+filterPresenter.init();
+routePresenter.init();
 
+document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {
+  evt.preventDefault();
+  routePresenter.createPoint();
+});
