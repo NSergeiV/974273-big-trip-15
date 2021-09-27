@@ -41,7 +41,8 @@ export default class HeaderMenu extends AbstractView {
 
   setMenuClickHandler(callback) {
     this._callback.menuClick = callback;
-    this.getElement().addEventListener('click', this._menuClickHandler);
+    this.getElement().querySelector('.trip-tabs').addEventListener('click', this._menuClickHandler);
+    this.getElement().querySelector(`[data-click=${MenuItem.NEW_EVENT}]`).addEventListener('click', this._menuClickHandler);
   }
 
   setMenuItem(menuItem) {

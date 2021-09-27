@@ -21,7 +21,6 @@ const pointsModel = new PointsModel();
 const headerMenu = new HeaderMenuView();
 renderElement(siteHeader, headerMenu, RenderPosition.AFTERBEGIN);
 const siteHeaderElementTripMain = siteHeader.querySelector('.trip-main');
-// const siteHeaderElementNavigation = siteHeader.querySelector('.trip-controls__navigation');
 const siteHeaderElementFilter = siteHeader.querySelector('.trip-controls__filters');
 
 pointsModel.setPoints(tasks);
@@ -36,7 +35,6 @@ const routePresenter = new RoutePresenter(siteBlockMain, pointsModel, filterMode
 const filterPresenter = new FilterPresenter(siteHeaderElementFilter, filterModel, pointsModel);
 
 const handlePointNewFormClose = () => {
-  // headerMenu.setMenuItem(MenuItem.POINTS);
   headerMenu.getElement().querySelector(`[data-click=${MenuItem.NEW_EVENT}]`).disabled = false;
 };
 
