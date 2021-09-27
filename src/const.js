@@ -21,3 +21,9 @@ export const FilterType = {
   FUTURE: 'future',
   PAST: 'past',
 };
+
+export const MenuItem = {
+  NEW_EVENT: 'NEW_EVENT',
+  POINTS: 'POINTS',
+  STATISTICS: 'STATISTICS',
+};

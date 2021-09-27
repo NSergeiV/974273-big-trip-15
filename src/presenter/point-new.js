@@ -19,6 +19,7 @@ export default class Point {
     this._routePointView = new RoutePointView();
 
     this._pointFormComponent = null;
+    this._destroyCallback = null;
     this._mode = Mode.DEFAULT;
 
     this._onEscPress = this._onEscPress.bind(this);
@@ -26,7 +27,9 @@ export default class Point {
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
   }
 
-  init() {
+  init(callback) {
+
+    this._destroyCallback = callback;
 
     if (this._pointFormComponent !== null) {
       return;
@@ -44,6 +47,10 @@ export default class Point {
 
     if (this._pointFormComponent === null) {
       return;
+    }
+
+    if (this._destroyCallback !== null) {
+      this._destroyCallback();
     }
 
     remove(this._pointFormComponent);

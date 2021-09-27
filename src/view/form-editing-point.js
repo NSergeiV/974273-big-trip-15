@@ -134,7 +134,7 @@ const createFormEditingPointTemplate = (data) => {
           <label class="event__label  event__type-output" for="event-destination-1">
             ${eventType}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${eventCity} list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value=${eventCity} list="destination-list-1" autocomplete="off">
           <datalist id="destination-list-1">
             <option value="Amsterdam"></option>
             <option value="Geneva"></option>
@@ -342,6 +342,25 @@ export default class FormEditingPoint extends SmartView {
         inputPrice.setCustomValidity('');
       }
       inputPrice.reportValidity();
+    });
+
+    const inputDestination = this.getElement().querySelector('.event__input--destination');
+    const cities = this._testDestination.map((item) => item.city);
+
+    inputDestination.addEventListener('input', () => {
+      const destinationValue = inputDestination.value;
+      if (destinationValue.length !== 0) {
+        cities.forEach((city) => {
+          if (city.toLowerCase().includes(destinationValue.toLowerCase(), 1)) {
+            inputDestination.setCustomValidity('Выберите из списка.');
+          } else {
+            inputDestination.setCustomValidity('Такого города нет в списке.');
+          }
+        });
+      } else {
+        inputDestination.setCustomValidity('Введите название города.');
+      }
+      inputDestination.reportValidity();
     });
   }
 

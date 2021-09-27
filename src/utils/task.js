@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
-import '../../node_modules/dayjs/plugin/isSameOrAfter';
+import isSameOrAfter from '../../node_modules/dayjs/plugin/isSameOrAfter.js';
 import {getRandomInteger} from './common.js';
+dayjs.extend(isSameOrAfter);
 
 const generateDate = (date) => {
   const maxDaysGap = 21520;
@@ -27,9 +28,7 @@ const calculate = (d, h, m) => {
   }
 };
 
-// export const isPontFuture = (dueDate) => dueDate === null ? false : dayjs('2010-01-01').isSameOrAfter(dayjs('2011-01-01'));
-export const isPontFuture = (dueDate) => dueDate === null ? false : dayjs(dueDate).isAfter(dayjs());
-// export const isPontFuture = (dueDate) => dayjs('2010-01-01').isSameOrAfter(dayjs('2011-01-01'));
+export const isPontFuture = (dueDate) => dueDate === null ? false : dayjs(dueDate).isSameOrAfter(dayjs());
 
 export const isPointFinished = (dueDate) => dueDate === null ? false : dayjs(dueDate).isBefore(dayjs());
 

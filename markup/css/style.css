@@ -264,7 +264,7 @@ main {
     opacity: 0.6; }
   .trip-tabs__btn--active, .trip-tabs__btn--active:hover, .trip-tabs__btn--active:active {
     opacity: 1;
-    cursor: default; }
+    cursor: default;}
 
 .trip-filters {
   display: -ms-flexbox;
@@ -715,7 +715,7 @@ main {
   margin: 0;
   margin-bottom: 4px; }
 
-.event__duration {
+.event__durationTime {
   margin: 0;
   font-size: 14px;
   line-height: 17px;

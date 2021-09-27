@@ -43,7 +43,7 @@ const createRoutePointDataTemplate = (data) => {
           &mdash;
           <time class="event__end-time" datetime="2019-03-18T11:00">${eventTimeEnd}</time>
         </p>
-        <p class="event__duration">${travelTime}</p>
+        <p class="event__durationTime">${travelTime}</p>
       </div>
       <p class="event__price">
         &euro;&nbsp;<span class="event__price-value">${eventPrice}</span>
